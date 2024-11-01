@@ -26,9 +26,6 @@ export const sessions = schema.table("sessions", {
         .notNull()
         .references(() => users.id),
 
-    ipAddr: text("ip_addr"),
-    userAgent: text("user_agent"),
-
     createdAt: timestamp("created_at").notNull().defaultNow(),
     expiresAt: timestamp("expires_at")
         .notNull()
