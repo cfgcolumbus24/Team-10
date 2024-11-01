@@ -3,3 +3,4 @@
 ## Members
 
 ### Christian Wilkins (MSU, Junior)
+### Alana Gorukanti (OSU, Sophomore)
