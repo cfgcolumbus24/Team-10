@@ -13,7 +13,7 @@
 
 ```json
 {
-	"posts": [{...}],
+ "posts": [{...}],
 }
 ```
 
@@ -45,12 +45,12 @@ Response
 
 ```json
 {
-	"name": "string",
-	"bio": "string",
-	"image": "string, resourc url",
-	"contact": "string",
-	"posts": [{...}],
-	"gallery": [{...}],
+ "name": "string",
+ "bio": "string",
+ "image": "string, resourc url",
+ "contact": "string",
+ "posts": [{...}],
+ "gallery": [{...}],
 }
 ```
 
@@ -60,12 +60,12 @@ Response
 
 ```json
 {
-	"name": "string",
-	"bio": "string",
-	"image": "string, resourc url",
-	"contact": "string",
-	"posts": [{...}],
-	"gallery": [{...}],
+ "name": "string",
+ "bio": "string",
+ "image": "string, resourc url",
+ "contact": "string",
+ "posts": [{...}],
+ "gallery": [{...}],
 }
 ```
 
@@ -75,10 +75,10 @@ Request
 
 ```json
 {
-	"name?": "string",
-	"bio?": "string",
-	"image?": "string, resourc url",
-	"contact?": "string",
+ "name?": "string",
+ "bio?": "string",
+ "image?": "string, resourc url",
+ "contact?": "string",
 }
 ```
 
@@ -90,7 +90,7 @@ Request
 
 ```json
 {
-	"userId": "string, uuid"
+ "userId": "string, uuid"
 }
 ```
 
@@ -100,6 +100,6 @@ Request
 
 ```json
 {
-	"userId": "string, uuid"
+ "userId": "string, uuid"
 }
 ```
