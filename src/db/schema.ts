@@ -1,24 +1,25 @@
 import {
     boolean,
     integer,
-    pgEnum,
-    pgTable,
+    pgSchema,
     text,
     timestamp,
 } from "drizzle-orm/pg-core";
 
 import { sql } from "drizzle-orm";
 
-export const users = pgTable("users", {
+export const schema = pgSchema("alumnet");
+
+export const users = schema.table("users", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     email: text().notNull().unique(),
     passwordHash: text("password_hash").notNull(), // update when a password reset request is defeated
     name: text().notNull().unique(),
-    bio: text().notNull(),
-    contact: text().notNull(),
+    bio: text(),
+    contact: text(),
 });
 
-export const sessions = pgTable("sessions", {
+export const sessions = schema.table("sessions", {
     token: text().notNull().primaryKey(), // generated using CSPRNG
 
     userId: integer("user_id")
@@ -36,7 +37,7 @@ export const sessions = pgTable("sessions", {
     invalidated: boolean().notNull().default(false),
 });
 
-export const follows = pgTable("follows", {
+export const follows = schema.table("follows", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     followerId: integer()
         .notNull()
@@ -47,14 +48,18 @@ export const follows = pgTable("follows", {
     createdAt: timestamp().notNull().defaultNow(),
 });
 
-export const media = pgTable("media", {
+export const media = schema.table("media", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     resourceUrl: text().notNull(),
 });
 
-export const postType = pgEnum("postType", ["opportunity", "post", "event"]);
+export const postType = schema.enum("postType", [
+    "opportunity",
+    "post",
+    "event",
+]);
 
-export const posts = pgTable("posts", {
+export const posts = schema.table("posts", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     userId: integer()
         .notNull()
