@@ -1,8 +1,8 @@
-import * as schema from "@/db/schema";
-
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
+import { posts } from "@/db/schema";
+import { withAuth } from "@/lib/auth";
 import { z } from "zod";
 
 const PostSchema = z.object({
@@ -11,45 +11,62 @@ const PostSchema = z.object({
     type: z.enum(["post", "opportunity", "event"]),
 });
 
-export async function POST(
-    request: Request
-): Promise<NextResponse<ApiResponse>> {
-    try {
-        const body = await request.json();
+export const POST = withAuth(
+    async (request, auth): Promise<NextResponse<ApiResponse>> => {
+        try {
+            if (!auth || !auth.user.id) {
+                return NextResponse.json(
+                    {
+                        success: false,
+                        message: "Unauthorized",
+                    },
+                    { status: 400 }
+                );
+            }
 
-        const result = PostSchema.safeParse(body);
-        if (!result.success) {
+            const body = await request.json();
+
+            const result = PostSchema.safeParse(body);
+            if (!result.success) {
+                return NextResponse.json(
+                    {
+                        success: false,
+                        error: "Invalid data",
+                    },
+                    {
+                        status: 400,
+                    }
+                );
+            }
+
+            const validatedData = result.data;
+
+            await dbClient.insert(posts).values({
+                userId: auth.user.id,
+                body: validatedData.body,
+                image: 456,
+                type: validatedData.type,
+            });
+
+            return NextResponse.json(
+                {
+                    success: true,
+                },
+                {
+                    status: 201,
+                }
+            );
+        } catch (error) {
+            console.log(error);
             return NextResponse.json(
                 {
                     success: false,
-                    error: "Invalid data",
+                    error: "Failed to process request",
                 },
                 {
-                    status: 400,
+                    status: 500,
                 }
             );
         }
-
-        const validatedData = result.data;
-
-        return NextResponse.json(
-            {
-                success: true,
-                data: validatedData,
-            },
-            {
-                status: 201,
-            }
-        );
-    } catch (error) {
-        return NextResponse.json(
-            {
-                success: false,
-                error: "Failed to process request",
-            },
-            {
-                status: 500,
-            }
-        );
     }
-}
+);
