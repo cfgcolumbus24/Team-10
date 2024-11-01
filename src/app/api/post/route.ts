@@ -1,5 +1,8 @@
+import * as schema from "@/db/schema";
+
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
+import { dbClient } from "@/db/client";
 import { z } from "zod";
 
 const PostSchema = z.object({
