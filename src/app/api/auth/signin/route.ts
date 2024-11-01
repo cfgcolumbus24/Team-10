@@ -71,8 +71,6 @@ export async function POST(
         await dbClient.insert(sessions).values({
             token,
             userId,
-            ipAddr: request.headers.get("x-forwarded-for") || "unknown",
-            userAgent: request.headers.get("user-agent") || "unknown",
         });
 
         // Create response with cookie

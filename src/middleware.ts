@@ -1,5 +1,3 @@
-// middleware.ts
-
 import { NextRequest, NextResponse } from "next/server";
 import { sessions, users } from "@/db/schema";
 
