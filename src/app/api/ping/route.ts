@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { ApiResponse } from "@/app/api/common";
-import { getAuthFromRequest } from "@/middleware";
 import { z } from "zod";
 
 // Define Zod schema for validation
@@ -17,24 +16,11 @@ export async function GET(
     try {
         // Mock data
         const data = { message: "Hello" };
-
-        const auth = getAuthFromRequest(request);
-
-        if (!auth) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: "Unauthorized",
-                },
-                {
-                    status: 401,
-                }
-            );
-        }
+        // Auth fetch
 
         return NextResponse.json({
             success: true,
-            data: data && { auth },
+            data: data,
         });
     } catch (error) {
         return NextResponse.json(
