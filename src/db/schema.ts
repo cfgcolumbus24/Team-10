@@ -16,6 +16,7 @@ export const users = schema.table("users", {
     passwordHash: text("password_hash").notNull(), // update when a password reset request is defeated
     name: text().notNull().unique(),
     bio: text(),
+    pic: integer().references(() => media.id),
     contact: text(),
 });
 
