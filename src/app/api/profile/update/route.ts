@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { ApiResponse } from "@/app/api/common";
+import { authUid } from "drizzle-orm/neon";
 import { dbClient } from "@/db/client"; // Import your database client
+import { eq } from "drizzle-orm";
 import { users } from "@/db/schema"; // Import your users schema
+import { withAuth } from "@/lib/auth";
 import { z } from "zod";
 
 // Define Zod schema for profile update validation
@@ -13,7 +17,7 @@ const UpdateProfileSchema = z.object({
 });
 
 // POST /profile
-export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse>> {
+export const POST = withAuth(async (request, auth) => {
     try {
         // Get the request body
         const body = await request.json();
@@ -36,7 +40,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
         const validatedData = result.data;
 
         // Get the authenticated user's ID from the request context
-        const userId = "1"; // Replace with the actual authenticated user ID
+        const userId = auth.user.id; // Replace with the actual authenticated user ID
 
         // Prepare the updates
         const updates: any = {};
@@ -44,7 +48,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
         if (validatedData.bio !== undefined) {
             updates.bio = validatedData.bio; // Allow null
         }
-        if (validatedData.image) updates.image = validatedData.image;
+        if (validatedData.pic) updates.pic = validatedData.pic;
         if (validatedData.contact) updates.contact = validatedData.contact;
 
         // Update the user profile in the database
@@ -85,4 +89,4 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
             }
         );
     }
-}
+});
