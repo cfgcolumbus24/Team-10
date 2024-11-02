@@ -1,37 +1,24 @@
-import { media, posts, users } from "@/db/schema";
+import { NextRequest, NextResponse } from "next/server";
+import { media, posts, users } from "@/db/schema"; // Import your schemas
 
 import { ApiResponse } from "@/app/api/common";
-import { NextResponse } from "next/server";
-import { dbClient } from "@/db/client";
-import { eq} from "drizzle-orm/sql/index";
-import { z } from "zod";
+import { dbClient } from "@/db/client"; // Import your database client
+import { eq } from "drizzle-orm";
+import { withAuth } from "@/lib/auth";
 
-const ParamsSchema = z.object({
-    profileId: z.coerce.number(),
-});
-
-export async function GET(
-    request: Request,
-    { params }: { params: Record<string, string> }
-): Promise<NextResponse<ApiResponse>> {
+export const GET = withAuth(async (req, auth) => {
     try {
-        const paramValues = await params;
-        const result = ParamsSchema.safeParse({
-            profileId: paramValues.profileId,
-        });
-
-        if (!result.success) {
+        if (!auth || !auth.user.id) {
             return NextResponse.json(
                 {
                     success: false,
-                    error: "Invalid parameters",
-                    details: result.error.issues,
+                    message: "Unauthorized",
                 },
                 { status: 400 }
             );
         }
 
-        const { profileId } = result.data;
+        const profileId = auth.user.id;
 
         const [profile] = await dbClient
             .select({
@@ -40,8 +27,10 @@ export async function GET(
                 bio: users.bio,
                 contact: users.contact,
                 pic: users.pic,
+                picUrl: media.resourceUrl,
             })
             .from(users)
+            .leftJoin(media, eq(media.id, users.pic))
             .where(eq(users.id, profileId));
 
         if (!profile) {
@@ -54,28 +43,11 @@ export async function GET(
             );
         }
 
-        /*
-        const userPosts = await dbClient.execute(
-            `SELECT * FROM posts WHERE "userId" = $1 AND type != 'post'`,
-            [profileId]
-        );
-        const galleryPosts = await dbClient.execute(
-            `SELECT * FROM posts WHERE "userId" = $1 AND type == 'post'`,
-            [profileId]
-        );
-        */
+        const userPosts = await dbClient
+            .select()
+            .from(posts)
+            .where(eq(posts.userId, profile.id));
 
-        
-        const userPosts = await dbClient.execute(
-            `SELECT * FROM posts WHERE "userId" = $1 AND type != 'post'`,
-            [profileId]
-        );
-
-        const galleryPosts = await dbClient.execute(
-            `SELECT * FROM posts WHERE "userId" = $1 AND type = 'post'`,
-            [profileId]
-        );
-        
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
             .from(posts)
@@ -87,19 +59,20 @@ export async function GET(
             data: {
                 message: "Hello world!",
                 profile,
-                galleryPosts,
                 userPosts,
                 userMedia,
             },
         });
     } catch (error) {
-        console.error("Error fetching post:", error);
+        console.error(error);
         return NextResponse.json(
             {
                 success: false,
-                error: "Failed to get data",
+                error: "Failed to get profile data",
             },
-            { status: 500 }
+            {
+                status: 500,
+            }
         );
     }
-}
+});
