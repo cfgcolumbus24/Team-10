@@ -66,6 +66,17 @@ export const GET = withAuth(async (req: NextRequest, auth) => {
             .from(posts)
             .where(and(eq(posts.userId, profile.id), eq(posts.type, "post")));
 
+        const eventPosts = await dbClient
+            .select()
+            .from(posts)
+            .where(and(eq(posts.userId, profile.id), eq(posts.type, "event")));
+
+        const jobsPosts = await dbClient
+            .select()
+            .from(posts)
+            .where(and(eq(posts.userId, profile.id), eq(posts.type, "opportunity")));
+
+
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
             .from(posts)
@@ -79,6 +90,8 @@ export const GET = withAuth(async (req: NextRequest, auth) => {
                 profile,
                 userPosts,
                 galleryPosts, // Added this to match your API response type
+                jobsPosts,
+                eventPosts,
                 userMedia,
             },
         });
