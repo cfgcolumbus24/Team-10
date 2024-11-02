@@ -1,16 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { media, posts, users } from "@/db/schema";
-import { withAuth, withOptionalAuth } from "@/lib/auth";
 
-import { ApiResponse } from "@/app/api/common";
 import { dbClient } from "@/db/client";
 import { ne } from "drizzle-orm";
+import { withOptionalAuth } from "@/lib/auth";
 import { z } from "zod";
-
-const ParamsSchema = z.object({
-    profileId: z.coerce.number(),
-});
 
 // Add this helper function to parse URL parameters
 function extractProfileId(url: string): number | null {
@@ -18,7 +13,7 @@ function extractProfileId(url: string): number | null {
     return match ? parseInt(match[1]) : null;
 }
 
-export const GET = withOptionalAuth(async (req: NextRequest, auth) => {
+export const GET = withOptionalAuth(async (req: NextRequest, _) => {
     try {
         // Extract profileId from URL path instead of search params
         const profileId = extractProfileId(req.nextUrl.pathname);

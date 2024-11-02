@@ -2,7 +2,7 @@ import type { ZodError } from "zod";
 
 export type ApiResponse = {
     success: boolean;
-    data?: any;
+    data?: Record<string, string> | null;
     error?: string;
 };
 
