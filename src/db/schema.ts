@@ -15,7 +15,7 @@ export const userType = schema.enum("userType", ["regular", "admin"]);
 export const users = schema.table("users", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     email: text().notNull().unique(),
-    passwordHash: text("password_hash").notNull(), // update when a password reset request is defeated
+    passwordHash: text().notNull(), // update when a password reset request is defeated
     name: text().notNull().unique(),
     bio: text(),
     pic: integer().references(() => media.id),
@@ -26,12 +26,12 @@ export const users = schema.table("users", {
 export const sessions = schema.table("sessions", {
     token: text().notNull().primaryKey(), // generated using CSPRNG
 
-    userId: integer("user_id")
+    userId: integer()
         .notNull()
         .references(() => users.id),
 
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    expiresAt: timestamp("expires_at")
+    createdAt: timestamp().notNull().defaultNow(),
+    expiresAt: timestamp()
         .notNull()
         .default(sql`CURRENT_TIMESTAMP + INTERVAL '1 week'`),
 

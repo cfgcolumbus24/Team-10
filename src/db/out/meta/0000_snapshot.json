@@ -1,5 +1,5 @@
 {
-  "id": "c6ea5f65-208f-487c-b135-72163b066c89",
+  "id": "ca3780ad-9399-4dc0-9014-7b18c9713c82",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -212,21 +212,21 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "expires_at": {
-          "name": "expires_at",
+        "expiresAt": {
+          "name": "expiresAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -242,13 +242,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "sessions_user_id_users_id_fk": {
-          "name": "sessions_user_id_users_id_fk",
+        "sessions_userId_users_id_fk": {
+          "name": "sessions_userId_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
           "schemaTo": "alumnet",
           "columnsFrom": [
-            "user_id"
+            "userId"
           ],
           "columnsTo": [
             "id"
@@ -290,8 +290,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "password_hash": {
-          "name": "password_hash",
+        "passwordHash": {
+          "name": "passwordHash",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -319,6 +319,14 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "userType": {
+          "name": "userType",
+          "type": "userType",
+          "typeSchema": "alumnet",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'regular'"
         }
       },
       "indexes": {},
@@ -367,7 +375,16 @@
       "values": [
         "opportunity",
         "post",
-        "event"
+        "event",
+        "admin"
+      ]
+    },
+    "alumnet.userType": {
+      "name": "userType",
+      "schema": "alumnet",
+      "values": [
+        "regular",
+        "admin"
       ]
     }
   },
