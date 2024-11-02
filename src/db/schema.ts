@@ -10,6 +10,8 @@ import { sql } from "drizzle-orm";
 
 export const schema = pgSchema("alumnet");
 
+export const userType = schema.enum("userType", ["regular", "admin"]);
+
 export const users = schema.table("users", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     email: text().notNull().unique(),
@@ -18,6 +20,7 @@ export const users = schema.table("users", {
     bio: text(),
     pic: integer().references(() => media.id),
     contact: text(),
+    userType: userType().default("regular"),
 });
 
 export const sessions = schema.table("sessions", {
@@ -55,6 +58,7 @@ export const postType = schema.enum("postType", [
     "opportunity",
     "post",
     "event",
+    "admin",
 ]);
 
 export const posts = schema.table("posts", {
