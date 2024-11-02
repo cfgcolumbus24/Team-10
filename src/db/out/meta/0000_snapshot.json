@@ -1,5 +1,5 @@
 {
-  "id": "ca3780ad-9399-4dc0-9014-7b18c9713c82",
+  "id": "750f9c9c-9659-4019-8d2b-ee128edef050",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -325,7 +325,7 @@
           "type": "userType",
           "typeSchema": "alumnet",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "'regular'"
         }
       },

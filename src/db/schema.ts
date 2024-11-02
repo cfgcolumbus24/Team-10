@@ -20,7 +20,7 @@ export const users = schema.table("users", {
     bio: text(),
     pic: integer().references(() => media.id),
     contact: text(),
-    userType: userType().default("regular"),
+    userType: userType().notNull().default("regular"),
 });
 
 export const sessions = schema.table("sessions", {

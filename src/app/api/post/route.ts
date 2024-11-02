@@ -8,7 +8,7 @@ import { z } from "zod";
 const PostSchema = z.object({
     image: z.number(),
     body: z.string(),
-    type: z.enum(["post", "opportunity", "event"]),
+    type: z.enum(["post", "opportunity", "event", "admin"]),
 });
 
 export const POST = withAuth(

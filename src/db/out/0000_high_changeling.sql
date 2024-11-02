@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS "alumnet"."users" (
 	"bio" text,
 	"pic" integer,
 	"contact" text,
-	"userType" "alumnet"."userType" DEFAULT 'regular',
+	"userType" "alumnet"."userType" DEFAULT 'regular' NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email"),
 	CONSTRAINT "users_name_unique" UNIQUE("name")
 );
