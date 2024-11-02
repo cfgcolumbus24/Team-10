@@ -19,7 +19,14 @@ import SearchForm from "@/components/ui/SearchForm";
 
 export default function Home() {
     const [feed, setFeed] = useState([]);
-    const [profile, setProfile] = useState<{ name?: string; bio?: string; contact?: string }>({});
+    const [profile, setProfile] = useState<{
+        name?: string;
+        bio?: string;
+        contact?: string;
+    }>({});
+    const [explore, setExplore] = useState<
+        { id: string; name: string; bio: string; pic: string }[]
+    >([]);
 
     useEffect(() => {
         async function fetchPosts() {
@@ -42,8 +49,19 @@ export default function Home() {
             }
         }
 
+        async function fetchExplore() {
+            const response = await fetch("/api/network/explore");
+            const result = await response.json();
+            console.log(result);
+            if (result.success) {
+                setExplore(result.data);
+                console.log(result.data);
+            }
+        }
+
         fetchPosts();
         fetchProfile();
+        fetchExplore();
     }, []);
 
     return (
@@ -153,54 +171,30 @@ export default function Home() {
                         <CardHeader>
                             <CardTitle className="text-2xl">
                                 {profile && profile.name
-                                    ? "Connect with others"
-                                    : "Explore others"}
+                                    ? "Connect"
+                                    : "Explore"}
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="grid grid-rows-3 grid-flow-col gap-1">
-                                <div className="row-span-3">
-                                    <Avatar className="items-center justify-center align-center w-16 h-16">
-                                        <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/memojis/png/vibrent_2.png" />
-                                        <AvatarFallback>CN</AvatarFallback>
-                                    </Avatar>
+                            {explore.map((stuff) => (
+                                <div
+                                    className="grid grid-rows-3 grid-flow-col gap-1"
+                                    key={stuff.id}
+                                >
+                                    <div className="row-span-3">
+                                        <Avatar className="items-center justify-center align-center w-16 h-16">
+                                            <AvatarImage src={`${stuff.pic}`} />
+                                            <AvatarFallback>CN</AvatarFallback>
+                                        </Avatar>
+                                    </div>
+                                    <div className="col-span-2 font-bold">
+                                        {stuff.name}
+                                    </div>
+                                    <div className="row-span-2 col-span-2 text-sm">
+                                        {stuff.bio}
+                                    </div>
                                 </div>
-                                <div className="col-span-2 font-bold">
-                                    Pablo Picasso
-                                </div>
-                                <div className="row-span-2 col-span-2 text-sm">
-                                    Aspiring artist
-                                </div>
-                            </div>
-                            <div className="grid grid-rows-3 grid-flow-col gap-1">
-                                <div className="row-span-3">
-                                    <Avatar className="items-center justify-center align-center w-16 h-16">
-                                        <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/memojis/png/vibrent_3.png" />
-                                        <AvatarFallback>CN</AvatarFallback>
-                                    </Avatar>
-                                </div>
-                                <div className="col-span-2 font-bold">
-                                    Frida Kahlo
-                                </div>
-                                <div className="row-span-2 col-span-2 text-sm">
-                                    Watercolor painter
-                                </div>
-                            </div>
-                            <div className="grid grid-rows-3 grid-flow-col gap-1">
-                                <div className="row-span-3">
-                                    <Avatar className="items-center justify-center align-center w-16 h-16">
-                                        <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/memojis/png/vibrent_4.png" />
-                                        <AvatarFallback>CN</AvatarFallback>
-                                    </Avatar>
-                                </div>
-                                <div className="col-span-2 font-bold">
-                                    Diego the Artist
-                                </div>
-                                <div className="row-span-2 col-span-2 text-sm">
-                                    {" "}
-                                    Pottery Enthusiast
-                                </div>
-                            </div>
+                            ))}
                         </CardContent>
                     </Card>
                 </div>

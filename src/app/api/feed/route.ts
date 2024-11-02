@@ -46,6 +46,7 @@ export async function GET(request: NextRequest) {
         const postsQuery = dbClient
             .select({
                 id: posts.id,
+                userPicture: users.pic,
                 resourceUrl: media.resourceUrl,
                 type: posts.type,
                 userId: posts.userId,
