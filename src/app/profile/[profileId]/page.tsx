@@ -98,6 +98,8 @@ export default function Index() {
                 </div> */}
                 <div className="flex flex-col gap-4 py-8 items-center justify-center">
                     <div className="w-[70%] space-y-8 flex flex-col gap-1">
+                        <GalleryCard />
+
                         {profile?.galleryPosts.map((post) => (
                             <a key={post.id} className="group">
                                 <Card>
@@ -136,7 +138,6 @@ export default function Index() {
                                 </Card>
                             </a>
                         ))}
-                        <GalleryCard />
                     </div>
                 </div>
             </div>
