@@ -14,8 +14,10 @@ export async function GET(
     { params }: { params: Record<string, string> }
 ): Promise<NextResponse<ApiResponse>> {
     try {
-        // Validate params
-        const result = ParamsSchema.safeParse({ profileId: params.profileId });
+        const paramValues = await params;
+        const result = ParamsSchema.safeParse({
+            profileId: paramValues.profileId,
+        });
 
         if (!result.success) {
             return NextResponse.json(
