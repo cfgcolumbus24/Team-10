@@ -83,7 +83,7 @@ export default function Index() {
                                 <Card>
                                     <CardHeader className="">
                                         <div className="flex items-center space-x-4">
-                                            <Avatar className="items-center justify-center align-center w-16 h-16">
+                                            <Avatar className="items-center justify-center align-center w-16 h-16 object-cover clip-content">
                                                 <AvatarImage
                                                     src={
                                                         profile.profile
