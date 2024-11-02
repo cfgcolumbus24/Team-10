@@ -124,7 +124,8 @@ export default function Home() {
                             </a>
                             <div className="flex justify-center mb-4">
                                 <button
-                                    className="px-4 py-2 bg-[#F3686B] self-center hover:bg-gray-100 text-white rounded"
+                                    className="px-4 py-2 border border-transparent bg-[#F3686B] text-white rounded transition-all duration-300 
+               hover:bg-white hover:border-[#F3686B] hover:text-[#F3686B]"
                                     onClick={handleSignOut}
                                 >
                                         Sign Out
