@@ -34,15 +34,17 @@ export default function ProfileCard({
             <p className="text-xl font-semibold">{firstName} {lastName}</p>
             <p className="text-base text-gray-500">{profession}</p>
           </div>
-          {/* Add Friend Button */}
-          <button className="bg-[#1CBCEE] text-white py-1.5 px-3 rounded-md hover:bg-[#F3686B] flex items-center space-x-1">
-            <MdPersonAdd className="text-lg" />
-            <span>Add</span>
-          </button>
+          
         </div>
         {/* Bio */}
         <p className="text-gray-700 text-sm">{bio}</p>
+        
       </div>
+      {/* Add Friend Button */}
+      <button className="bg-[#1CBCEE] text-white py-1.5 px-3 rounded-md hover:bg-[#F3686B] flex items-start self-start space-x-1">
+        <MdPersonAdd className="text-lg" />
+        <span>Add</span>
+      </button>
     </section>
   );
 }
