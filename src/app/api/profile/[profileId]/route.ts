@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
+import { and, eq } from "drizzle-orm/sql/index";
 import { media, posts, users } from "@/db/schema"; // Import your schemas
 
 import { ApiResponse } from "@/app/api/common";
 import { dbClient } from "@/db/client"; // Import your database client
-import { eq } from "drizzle-orm";
+import { ne } from "drizzle-orm";
 import { withAuth } from "@/lib/auth";
+import { z } from "zod";
+
+const ParamsSchema = z.object({
+    profileId: z.coerce.number(),
+});
+
+
 
 export const GET = withAuth(async (req, auth) => {
     try {
@@ -46,7 +54,12 @@ export const GET = withAuth(async (req, auth) => {
         const userPosts = await dbClient
             .select()
             .from(posts)
-            .where(eq(posts.userId, profile.id));
+            .where(and(eq(posts.userId, profile.id), ne(posts.type, "post")));
+
+        const galleryPosts = await dbClient
+            .select()
+            .from(posts)
+            .where(and(eq(posts.userId, profile.id), eq(posts.type, "post")));
 
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
