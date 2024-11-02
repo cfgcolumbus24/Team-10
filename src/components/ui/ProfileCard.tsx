@@ -1,31 +1,30 @@
 import React from 'react';
 import '../../app/globals.css'; // Adjust the path as necessary
 import { MdPersonAdd } from 'react-icons/md';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface ProfileCardProps {
   firstName: string;
   lastName: string;
   profession: string;
   bio: string;
-  profilePic: string;
 }
 
 export default function ProfileCard({
   firstName,
   lastName,
   profession,
-  bio,
-  profilePic,
+  bio
 }: ProfileCardProps) {
   return (
     <section className="w-3/4 mx-auto p-4 bg-white rounded-lg shadow-md border border-gray-200 flex items-center relative space-x-4 mt-4">
       {/* Profile Picture */}
       <div className="flex-shrink-0">
-        <img
-          src={profilePic}
-          alt={`${firstName} ${lastName}`}
-          className="w-28 h-28 rounded-full object-cover border-4 border-gray-100 p-1"
-        />
+        <Avatar className="items-center justify-center align-center w-32 h-32">
+          <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover"/>
+          <AvatarFallback>PFP</AvatarFallback>
+        </Avatar>
+
       </div>
 
       {/* Profile Details */}
