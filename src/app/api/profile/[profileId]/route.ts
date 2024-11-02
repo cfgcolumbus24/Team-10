@@ -3,7 +3,7 @@ import { media, posts, users } from "@/db/schema";
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
-import { eq, and, notEq } from "drizzle-orm/sql/index";
+import { eq} from "drizzle-orm/sql/index";
 import { z } from "zod";
 
 const ParamsSchema = z.object({

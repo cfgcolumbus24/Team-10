@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, ne } from "drizzle-orm";
 import { media, posts, users } from "@/db/schema"; // Import your schemas
 
 import { ApiResponse } from "@/app/api/common";
 import { dbClient } from "@/db/client"; // Import your database client
-import { and,eq,} from "drizzle-orm";
+import { eq} from "drizzle-orm";
 import { withAuth } from "@/lib/auth";
 
 export const GET = withAuth(async (req, auth) => {
