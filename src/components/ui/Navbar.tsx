@@ -5,19 +5,22 @@ import Image from "next/image";
 import React from 'react';
 import SearchForm from "./SearchForm";
 import { useRouter } from 'next/compat/router'
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+
 
 export default function Navbar() {
   const router = useRouter();
 
   return (
     <>
-      <nav className="bg-gray-800">
+      <nav className="bg-[#131313] bg-opacity-90 sticky top-0 z-50">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
               <button
                 type="button"
-                className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                className="relative inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-white hover:text-[#121212] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                 aria-controls="mobile-menu"
                 aria-expanded="false"
               >
@@ -56,55 +59,83 @@ export default function Navbar() {
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
               <div className="flex flex-shrink-0 items-center text-white">
                 <Image
-                  className="h-8 w-auto"
-                  src="/LMCC_logo.png"
+                  className="h-8 w-auto pr-4"
+                  src="/LMCClogo.png"
                   alt="LMCC"
-                  width={32} // Specify width
-                  height={32} // Specify height
+                  width={32}
+                  height={32}
                 />
-                <div className="ml-2">
-                  Lower Manhattan Cultural Council Inc.
+                <div className="ml-2 text-[#25BAF0] font-bold">
+                  <Badge
+                    className="text-lg px-4 py-1 bg-[#131313] text-[#25BAF0] cursor-pointer hover:bg-[#4372BC]"
+                    onClick={() => window.open('https://lmcc.net', '_blank')}
+                  >
+                    Lower Manhattan Cultural Council
+                  </Badge>
                 </div>
               </div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
-                <a
-                    href="#"
-                    className="rounded-md px-1 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  <Button
+                    className="rounded-full px-3 py-4 text-base font-medium bg-none text-[#000000] hover:bg-[#4372BC]"
+                    onClick={() => router?.push('/')}
                   >
-                  <svg className="w-6 h-6 mb-1" fill="white" viewBox="0 0 24 24">
-                    <path d="M12 3l9 9h-3v9H6v-9H3l9-9z" />
-                  </svg>
-                </a>
-                <a
-                  href="#"
-                  className="rounded-md px-1 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  <svg className="w-6 h-6 mb-1 text-white" fill="white" viewBox="0 0 24 24">
-                    <path d="M12 2a2 2 0 00-2 2v1c-1.74 0-3.28.79-4.2 2.01A5.978 5.978 0 005 11v6l-1 1v1h16v-1l-1-1v-6a5.978 5.978 0 00-2.8-5.99A5.976 5.976 0 0014 5V4a2 2 0 00-2-2zM5 17h14v-6c0-2.21-1.79-4-4-4H9c-2.21 0-4 1.79-4 4v6zM12 20c1.1 0 2-.9 2-2H10c0 1.1.9 2 2 2z" />
-                  </svg>
-                </a>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="40"
+                      height="40"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#25BAF0"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                      <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                  </Button>
+                  <Button
+                    className="rounded-full px-3 py-4 text-base font-medium bg-none text-[#000000] hover:bg-[#4372BC]"
+                    onClick={() => router?.push('/notifications')}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="40"
+                      height="40"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#25BAF0"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                    </svg>
+                  </Button>
                 </div>
               </div>
             </div>
-            <SearchForm message="Searching for Events, Artists, and Jobs"/>
+            <SearchForm message="Searching for Events, Artists, and Jobs" />
           </div>
         </div>
         <div className="sm:hidden" id="mobile-menu">
           <div className="space-y-1 px-2 pb-3 pt-2">
-            <a
-              href="#"
-              className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
-              aria-current="page"
+            <Button
+              variant="secondary"
+              className="w-full justify-start"
+              onClick={() => router?.push('/')}
             >
               Home
-            </a>
-            <a
-              href="#"
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-white hover:bg-white hover:text-[#121212]"
+              onClick={() => router?.push('/notifications')}
             >
               Notifications
-            </a>
+            </Button>
           </div>
         </div>
       </nav>
