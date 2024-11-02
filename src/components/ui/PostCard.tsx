@@ -22,11 +22,19 @@ export default function PostCard() {
   }, []);
 
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? posts.length - 1 : prevIndex - 1));
+    setCurrentIndex((prevIndex) => {
+      const newIndex = prevIndex === 0 ? posts.length - 1 : prevIndex - 1;
+      console.log("Scrolling Left to Index:", newIndex); // Debugging log
+      return newIndex;
+    });
   };
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === posts.length - 1 ? 0 : prevIndex + 1));
+    setCurrentIndex((prevIndex) => {
+      const newIndex = prevIndex === posts.length - 1 ? 0 : prevIndex + 1;
+      console.log("Scrolling Right to Index:", newIndex); // Debugging log
+      return newIndex;
+    });
   };
 
   const getDisplayPosts = () => {
@@ -42,8 +50,9 @@ export default function PostCard() {
     <div className="overflow-hidden p-4 bg-white rounded-lg shadow-md border border-gray-200 min-h-[300px] flex justify-center items-center relative mt-4">
       <button
         onClick={handlePrev}
-        className="absolute left-0 p-2 text-gray-500 hover:text-gray-700"
+        className="absolute inset-y-0 left-2 p-4 text-gray-500 hover:text-gray-700 z-10"
         aria-label="Previous post"
+        style={{ fontSize: '2rem' }} // Larger button for better touch support
       >
         &#8249;
       </button>
@@ -51,7 +60,6 @@ export default function PostCard() {
       <div className="flex gap-x-6 transition-transform duration-300 ease-in-out justify-center items-center">
         {displayPosts.map((post, index) => {
           const isMainPost = index === 1; // Main post is always at center in the array
-          const isTeasedPost = !isMainPost;
 
           // Styles for main and teased posts based on screen size
           const mainPostStyles = isLargeScreen
@@ -84,8 +92,9 @@ export default function PostCard() {
 
       <button
         onClick={handleNext}
-        className="absolute right-0 p-2 text-gray-500 hover:text-gray-700"
+        className="absolute inset-y-0 right-2 p-4 text-gray-500 hover:text-gray-700 z-10"
         aria-label="Next post"
+        style={{ fontSize: '2rem' }} // Larger button for better touch support
       >
         &#8250;
       </button>
