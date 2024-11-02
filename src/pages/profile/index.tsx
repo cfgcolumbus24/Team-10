@@ -10,10 +10,9 @@ export default function index() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col p-4 sm:p-8 md:mx-32 gap-4">
+      <div className="flex flex-col px-4 sm:mr-12 sm:ml-12 md:mr-20 md:ml-20 lg:mr-32 lg:ml-32">
         
-        {/* Profile and Contact Cards */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+        <div className="flex flex-col sm:flex-row gap-y-4 sm:gap-y-0 sm:gap-x-4">
           <ProfileCard
             firstName="John"
             lastName="Doe"
@@ -26,8 +25,7 @@ export default function index() {
           />
         </div>
 
-        {/* Gallery and Post Cards */}
-        <div className="flex flex-col mt-4 gap-4">
+        <div className="flex flex-col mt-4">
           <GalleryCard />
           <PostCard />
         </div>
