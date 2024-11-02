@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, eq, inArray, isNull, not, sql } from "drizzle-orm";
+import { eq, inArray, not, sql } from "drizzle-orm";
 import { follows, sessions, users } from "@/db/schema";
 
 import { AuthContext } from "@/lib/auth";
