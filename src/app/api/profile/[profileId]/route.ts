@@ -69,16 +69,14 @@ export async function GET(
         const userPosts = await dbClient
             .select()
             .from(posts)
-            .where(eq(posts.userId, profile.id))
-            .where(notEq(posts.type, "post")); //change made to just show other posts
+            .where(and(eq(posts.userId, profile.id), notEq(posts.type, "post"))); //change made to just show other posts
             
 
         const galleryPosts = await dbClient
             .select()
             .from(posts)
-            .where(eq(posts.userId, profile.id))
-            .where(eq(posts.type, "post"))
-            .execute();
+            .where(and(eq(posts.userId, profile.id), eq(posts.type, "post")));
+            //.execute();
         
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })

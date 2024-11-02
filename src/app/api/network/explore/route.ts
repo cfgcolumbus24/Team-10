@@ -63,8 +63,13 @@ async function getRandomUsers(dbClient: any, auth: AuthContext | null) {
                 name: users.name,
                 bio: users.bio,
                 pic: users.pic,
+                picUrl: sql<string>`user_media."resourceUrl"`,
             })
             .from(users)
+            .leftJoin(
+                sql`alumnet.media AS user_media`,
+                sql`${users.pic} = user_media.id`
+            )
             .where(not(inArray(users.id, excludeIds)))
             .orderBy(sql`RANDOM()`)
             .limit(5);
@@ -75,8 +80,13 @@ async function getRandomUsers(dbClient: any, auth: AuthContext | null) {
                 name: users.name,
                 bio: users.bio,
                 pic: users.pic,
+                picUrl: sql<string>`user_media."resourceUrl"`,
             })
             .from(users)
+            .leftJoin(
+                sql`alumnet.media AS user_media`,
+                sql`${users.pic} = user_media.id`
+            )
             .orderBy(sql`RANDOM()`)
             .limit(5);
     }
