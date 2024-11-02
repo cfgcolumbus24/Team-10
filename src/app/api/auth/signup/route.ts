@@ -64,7 +64,6 @@ export async function POST(
                 success: true,
                 data: {
                     userId: newUser.id,
-                    email: newUser.email,
                 },
             },
             {

@@ -17,7 +17,7 @@ export async function GET(
 ): Promise<NextResponse<ApiResponse>> {
     try {
         // Validate params
-        const result = ParamsSchema.safeParse({ postId: params.postId });
+        const result = ParamsSchema.safeParse({ postId: await params.postId });
 
         if (!result.success) {
             return NextResponse.json(

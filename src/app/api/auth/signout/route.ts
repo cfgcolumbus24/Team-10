@@ -5,19 +5,16 @@ import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
 import { eq } from "drizzle-orm";
 import { sessions } from "@/db/schema";
+import { withAuth } from "@/lib/auth";
 
 /**
  * POST handler for user logout
  * Invalidates the current session and clears the session cookie
  */
-export async function POST(
-    request: Request
-): Promise<NextResponse<ApiResponse>> {
+export const POST = withAuth(async (req, auth) => {
     try {
         // Get auth context from your auth middleware
-        const auth = request.headers.get("authorization");
-
-        if (!auth) {
+        if (!auth.session.token) {
             return NextResponse.json(
                 {
                     success: false,
@@ -33,13 +30,12 @@ export async function POST(
         await dbClient
             .update(sessions)
             .set({ invalidated: true })
-            .where(eq(sessions.token, auth));
+            .where(eq(sessions.token, auth.session.token));
 
         // Create response and clear the cookie
         const response = NextResponse.json(
             {
                 success: true,
-                data: { loggedOut: true },
             },
             {
                 status: 200,
@@ -80,4 +76,4 @@ export async function POST(
             }
         );
     }
-}
+});
