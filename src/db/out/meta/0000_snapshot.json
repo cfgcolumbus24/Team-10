@@ -1,5 +1,5 @@
 {
-  "id": "750f9c9c-9659-4019-8d2b-ee128edef050",
+  "id": "2070692a-4bc4-40bd-943d-66028082df24",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -163,6 +163,13 @@
           "typeSchema": "alumnet",
           "primaryKey": false,
           "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -327,6 +334,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'regular'"
+        },
+        "onboarded": {
+          "name": "onboarded",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},
