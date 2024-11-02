@@ -54,7 +54,7 @@ const LoginForm = () => {
             if (!result.data.onboarded) {
                 window.location.href = "/auth/onboarding";
             } else {
-                window.location.href = "/feed";
+                window.location.href = "/";
             }
         } catch (err) {
             setError("Failed to connect to server");

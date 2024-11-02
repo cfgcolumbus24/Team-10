@@ -95,7 +95,7 @@ const OnboardingForm = () => {
                 throw new Error(result.error || "Failed to update profile");
             }
 
-            router.push("/feed");
+            router.push("/");
         } catch (err) {
             setError(
                 err instanceof Error ? err.message : "Failed to update profile"
