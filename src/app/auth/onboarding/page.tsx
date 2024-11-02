@@ -2,6 +2,7 @@
 
 import { ChevronRight, Loader2, Upload } from "lucide-react";
 import React, { useRef, useState } from "react";
+import { useAuth, withAuthRedirect } from "@/contexts/AuthContext";
 
 import Image from "next/image";
 import { useForm } from "react-hook-form";
@@ -245,4 +246,4 @@ const OnboardingForm = () => {
     );
 };
 
-export default OnboardingForm;
+export default withAuthRedirect(OnboardingForm);
