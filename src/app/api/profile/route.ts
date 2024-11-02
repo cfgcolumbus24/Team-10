@@ -57,6 +57,12 @@ export const GET = withAuth(async (req, auth) => {
             .leftJoin(media, eq(media.id, posts.image))
             .where(and(eq(posts.userId, profile.id), eq(posts.type, "post")));
 
+        const eventPosts = await dbClient
+            .select()
+            .from(posts)
+            .where(and(eq(posts.userId, profile.id), eq(posts.type, "event")));
+
+
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
             .from(posts)
@@ -70,6 +76,7 @@ export const GET = withAuth(async (req, auth) => {
                 profile,
                 userPosts,
                 galleryPosts,
+                eventPosts,
                 userMedia,
             },
         });

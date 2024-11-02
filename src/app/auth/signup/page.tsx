@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -31,6 +31,7 @@ const SignupForm = () => {
 
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -158,7 +159,6 @@ const SignupForm = () => {
                                         </span>
                                     )}
                                 </div>
-
                                 <div className="flex flex-col gap-1">
                                     <label
                                         htmlFor="password"
@@ -166,6 +166,7 @@ const SignupForm = () => {
                                     >
                                         Password
                                     </label>
+                                    
                                     <input
                                         {...register("password", {
                                             required: "Password is required",
@@ -180,11 +181,18 @@ const SignupForm = () => {
                                                     "Password must be less than 64 characters",
                                             },
                                         })}
-                                        type="password"
+                                        type={isPasswordVisible ? "text" : "password"}
                                         id="password"
                                         placeholder="Password"
-                                        className="p-2 border border-gray-300 rounded-md bg-background text-foreground focus:border-blue-500 focus:outline-none"
+                                        className="inline p-2 border border-gray-300 rounded-md bg-background text-foreground focus:border-blue-500 focus:outline-none"
                                     />
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                                        className="p-1 cursor-pointer text-gray-500"
+                                    >
+                                        {isPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    </button>
                                     {errors.password && (
                                         <span className="text-red-600 text-sm">
                                             {errors.password.message as string}
