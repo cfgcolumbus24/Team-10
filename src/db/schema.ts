@@ -68,9 +68,7 @@ export const posts = schema.table("posts", {
         .notNull()
         .references(() => users.id),
     body: text().notNull(),
-    image: integer()
-        .notNull()
-        .references(() => media.id),
+    image: integer().references(() => media.id),
     type: postType().notNull(),
     timestamp: timestamp().notNull().defaultNow(),
 });

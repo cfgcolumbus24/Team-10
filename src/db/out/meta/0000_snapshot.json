@@ -1,5 +1,5 @@
 {
-  "id": "2070692a-4bc4-40bd-943d-66028082df24",
+  "id": "ec5ea5ca-a926-4819-b7fd-2c6c9c3b03af",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -155,7 +155,7 @@
           "name": "image",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "type": {
           "name": "type",

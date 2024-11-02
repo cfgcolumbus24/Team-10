@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS "alumnet"."posts" (
 	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "alumnet"."posts_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
 	"userId" integer NOT NULL,
 	"body" text NOT NULL,
-	"image" integer NOT NULL,
+	"image" integer,
 	"type" "alumnet"."postType" NOT NULL,
 	"timestamp" timestamp DEFAULT now() NOT NULL
 );
