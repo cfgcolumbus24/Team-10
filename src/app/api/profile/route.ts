@@ -62,6 +62,11 @@ export const GET = withAuth(async (req, auth) => {
             .from(posts)
             .where(and(eq(posts.userId, profile.id), eq(posts.type, "event")));
 
+        const jobsPosts = await dbClient
+            .select()
+            .from(posts)
+            .where(and(eq(posts.userId, profile.id), eq(posts.type, "opportunity")));
+
 
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
@@ -77,6 +82,7 @@ export const GET = withAuth(async (req, auth) => {
                 userPosts,
                 galleryPosts,
                 eventPosts,
+                jobsPosts,
                 userMedia,
             },
         });
