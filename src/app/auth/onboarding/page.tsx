@@ -2,6 +2,7 @@
 
 import { ChevronRight, Loader2, Upload } from "lucide-react";
 import React, { useRef, useState } from "react";
+import { useAuth, withAuthRedirect } from "@/contexts/AuthContext";
 
 import Image from "next/image";
 import { useForm } from "react-hook-form";
@@ -95,7 +96,7 @@ const OnboardingForm = () => {
                 throw new Error(result.error || "Failed to update profile");
             }
 
-            router.push("/feed");
+            router.push("/");
         } catch (err) {
             setError(
                 err instanceof Error ? err.message : "Failed to update profile"
@@ -222,7 +223,7 @@ const OnboardingForm = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="p-2.5 font-semibold bg-highlight text-foreground rounded-md hover:bg-highlight/80 disabled:bg-highlight/50 group"
+                            className="p-2.5 font-semibold bg-blue-300 text-foreground rounded-md hover:bg-blue-400 disabled:bg-blue-200 group"
                         >
                             <span className="flex flex-row items-center justify-between">
                                 {isLoading ? (
@@ -245,4 +246,4 @@ const OnboardingForm = () => {
     );
 };
 
-export default OnboardingForm;
+export default withAuthRedirect(OnboardingForm);

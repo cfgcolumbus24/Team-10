@@ -3,7 +3,7 @@ import { media, posts, users } from "@/db/schema";
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
 const ParamsSchema = z.object({
@@ -57,7 +57,15 @@ export async function GET(
         const userPosts = await dbClient
             .select()
             .from(posts)
-            .where(eq(posts.userId, profile.id));
+            .where(eq(posts.userId, profile.id))
+            .where(notEq(posts.type,"post")); //change made to just show other posts
+
+        const galleryPosts = await dbClient
+            .select()
+            .from(posts)
+            .where(eq(posts.userId, userId))
+            .where(eq(posts.type, "post"))
+            .execute();
 
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
@@ -70,6 +78,7 @@ export async function GET(
             data: {
                 message: "Hello world!",
                 profile,
+                galleryPosts,
                 userPosts,
                 userMedia,
             },

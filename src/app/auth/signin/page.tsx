@@ -26,7 +26,7 @@ const LoginForm = () => {
         handleSubmit,
         formState: { errors },
         reset,
-        getValues,
+        //getValues,
     } = useForm();
 
     const onSubmit = async (data: any) => {
@@ -54,7 +54,7 @@ const LoginForm = () => {
             if (!result.data.onboarded) {
                 window.location.href = "/auth/onboarding";
             } else {
-                window.location.href = "/feed";
+                window.location.href = "/";
             }
         } catch (err) {
             setError("Failed to connect to server");
@@ -144,7 +144,7 @@ const LoginForm = () => {
                     <button
                         type="submit"
                         disabled={Object.keys(errors).length > 0}
-                        className="p-2.5 font-semibold bg-highlight text-foreground rounded-md hover:bg-highlight/80 disabled:bg-highlight/50 group"
+                        className="p-2.5 font-semibold bg-blue-300 text-foreground rounded-md hover:bg-blue-400 disabled:bg-blue-200 groupÍ"
                     >
                         <span className="flex flex-row items-center justify-between">
                             {showPassword ? "Sign In" : "Continue"}
