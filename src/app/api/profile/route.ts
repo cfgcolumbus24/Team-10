@@ -27,8 +27,10 @@ export const GET = withAuth(async (req, auth) => {
                 bio: users.bio,
                 contact: users.contact,
                 pic: users.pic,
+                picUrl: media.resourceUrl,
             })
             .from(users)
+            .leftJoin(media, eq(media.id, users.pic))
             .where(eq(users.id, profileId));
 
         if (!profile) {
