@@ -12,6 +12,7 @@ interface ProfileFormData {
     name: string;
     bio: string;
     contact: string;
+    name2: string;
 }
 
 const OnboardingForm = () => {
@@ -227,10 +228,12 @@ const OnboardingForm = () => {
                             htmlFor="name"
                             className="text-sm font-medium text-gray-700"
                         >
-                            Enter a referral email of an artist who would enjoy LMCC to receive exclusive event invites and opportunities to join our art shows.
+                            Enter a referral email of an artist who would enjoy
+                            LMCC to receive exclusive event invites and
+                            opportunities to join our art shows.
                         </label>
                         <input
-                            {...register("name")}
+                            {...register("name2")}
                             type="email"
                             id="refEmail"
                             placeholder="Give a referral email"
