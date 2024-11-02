@@ -1,17 +1,20 @@
+import { NextRequest, NextResponse } from "next/server";
 import { and, desc, eq, sql } from "drizzle-orm";
-import { posts, users } from "@/db/schema";
+import { media, posts, users } from "@/db/schema";
 
-import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
 import { withAuth } from "@/lib/auth";
 import { z } from "zod";
 
 // Define the schema for filtering posts by type
 const FeedTypeQuery = z.object({
-    typeOnlyFeed: z.enum(["opportunity", "post", "event", "admin"]).optional(),
+    typeOnlyFeed: z
+        .enum(["opportunity", "post", "event", "admin"])
+        .optional()
+        .nullable(),
 });
 
-export const GET = withAuth(async (request, auth) => {
+export async function GET(request: NextRequest) {
     try {
         // Extract query parameters
         const { searchParams } = new URL(request.url);
@@ -32,28 +35,6 @@ export const GET = withAuth(async (request, auth) => {
             );
         }
 
-        // Get the authenticated user's ID from the request context
-        const userId = auth.user.id; // Replace with the actual authenticated user ID
-
-        // Build the query to get the user profile
-        const userProfile = await dbClient
-            .select()
-            .from(users)
-            .where(eq(users.id, userId))
-            .execute();
-
-        if (userProfile.length === 0) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: "User not found",
-                },
-                {
-                    status: 404,
-                }
-            );
-        }
-
         const validPostTypes = [
             "opportunity",
             "post",
@@ -63,18 +44,23 @@ export const GET = withAuth(async (request, auth) => {
         type PostType = (typeof validPostTypes)[number];
 
         const postsQuery = dbClient
-            .select()
+            .select({
+                id: posts.id,
+                resourceUrl: media.resourceUrl,
+                type: posts.type,
+                userId: posts.userId,
+                body: posts.body,
+                timestamp: posts.timestamp,
+            })
             .from(posts)
+            .leftJoin(media, eq(posts.image, media.id))
             .where(
-                and(
-                    eq(posts.userId, userId),
-                    typeOnlyFeed && validatedQuery.data.typeOnlyFeed
-                        ? eq(
-                              posts.type,
-                              validatedQuery.data.typeOnlyFeed as PostType
-                          )
-                        : sql`1=1`
-                )
+                typeOnlyFeed && validatedQuery.data.typeOnlyFeed
+                    ? eq(
+                          posts.type,
+                          validatedQuery.data.typeOnlyFeed as PostType
+                      )
+                    : sql`1=1`
             )
             .orderBy(desc(posts.timestamp));
 
@@ -85,7 +71,6 @@ export const GET = withAuth(async (request, auth) => {
         const response = {
             success: true,
             data: {
-                profile: userProfile[0], // Assuming userProfile contains only one user
                 posts: userPosts,
             },
         };
@@ -103,4 +88,4 @@ export const GET = withAuth(async (request, auth) => {
             }
         );
     }
-});
+}
