@@ -35,8 +35,8 @@ export default function Home() {
       {/* left panel - profile info */}
       <div className="w-full flex-auto content-center items-start justify-center flex p-20 space-x-8">
         <div className="w-[25%]">
-          <Card className="">
-            <div className="flex items-center justify-center pt-4">
+          <Card className="gap-0">
+            <div className="flex items-center justify-center pt-4 pb-0">
               <Avatar className="items-center justify-center align-center w-16 h-16">
                 <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover" />
                 <AvatarFallback>PFP</AvatarFallback>
