@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { alias, pgTable } from "drizzle-orm/pg-core";
 import { and, desc, eq, sql } from "drizzle-orm";
 import { media, posts, users } from "@/db/schema";
 
@@ -47,6 +48,7 @@ export async function GET(request: NextRequest) {
             .select({
                 id: posts.id,
                 resourceUrl: media.resourceUrl,
+                userPicResourceUrl: sql<string>`user_media."resourceUrl"`,
                 type: posts.type,
                 userId: posts.userId,
                 userName: users.name,
@@ -56,6 +58,10 @@ export async function GET(request: NextRequest) {
             .from(posts)
             .leftJoin(users, eq(posts.userId, users.id))
             .leftJoin(media, eq(posts.image, media.id))
+            .leftJoin(
+                sql`alumnet.media AS user_media`,
+                sql`${users.pic} = user_media.id`
+            )
             .where(
                 typeOnlyFeed && validatedQuery.data.typeOnlyFeed
                     ? eq(
@@ -65,7 +71,6 @@ export async function GET(request: NextRequest) {
                     : sql`1=1`
             )
             .orderBy(desc(posts.timestamp));
-
         // Execute the posts query
         const userPosts = await postsQuery.execute();
 
