@@ -197,7 +197,6 @@ const LoginForm: React.FC = () => {
                             <span>Remember me</span>
                         </label>
                         <a
-                            href="/auth/forgot-password"
                             className="text-blue-500 hover:underline"
                         >
                             Forgot Password?
