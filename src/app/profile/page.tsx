@@ -119,6 +119,7 @@ export default function Index() {
                                 </Card>
                             </a>
                         ))}
+                        <GalleryCard />
                     </div>
                 </div>
             </div>
