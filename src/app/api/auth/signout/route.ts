@@ -1,5 +1,3 @@
-// app/api/logout/route.ts
-
 import { ApiResponse, statusMessageFromZodError } from "@/app/api/common";
 import { ZodError, z } from "zod";
 

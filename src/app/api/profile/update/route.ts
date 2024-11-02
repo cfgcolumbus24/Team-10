@@ -1,7 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
-
-import { ApiResponse } from "@/app/api/common";
-import { authUid } from "drizzle-orm/neon";
+import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client"; // Import your database client
 import { eq } from "drizzle-orm";
 import { users } from "@/db/schema"; // Import your users schema

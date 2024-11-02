@@ -1,5 +1,3 @@
-// app/api/register/route.ts
-
 import * as argon2 from "argon2";
 
 import { ApiResponse, statusMessageFromZodError } from "@/app/api/common";
