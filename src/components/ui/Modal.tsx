@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from "react";
 
 const Modal: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-    const [file, setFile] = useState<File | null>(null); // State to hold the uploaded file
-    const [postBody, setPostBody] = useState(""); // State to hold the post body
+    const [file, setFile] = useState<File | null>(null);
+    const [postBody, setPostBody] = useState("");
+    const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const openModal = () => {
@@ -17,7 +18,8 @@ const Modal: React.FC = () => {
         setIsModalOpen(false);
         setPreviewUrl(null);
         setFile(null);
-        setPostBody(""); // Reset post body when modal is closed
+        setPostBody("");
+        setIsUploading(false);
     };
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,49 +35,69 @@ const Modal: React.FC = () => {
     };
 
     const handlePostSubmit = async () => {
+        if (!file && !postBody) return;
+
+        setIsUploading(true);
         try {
             let mediaId: number | null = null;
 
-            // If there's a file, request the media generation
             if (file) {
-                const formData = new FormData();
-                formData.append('file', file);
-
-                // Call the media generation endpoint
-                const mediaResponse = await fetch('/api/media', {
-                    method: 'POST',
-                    body: formData,
+                // 1. Get the presigned URL from your API
+                const presignedUrlResponse = await fetch("/api/media", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        fileName: file.name,
+                        fileType: file.type,
+                    }),
                 });
-                
-                const mediaData = await mediaResponse.json();
-                if (mediaData.success) {
-                    mediaId = mediaData.data.mediaId;
-                } else {
-                    console.error("Media generation failed:", mediaData.error);
+
+                const {
+                    data: { uploadUrl, mediaId: newMediaId },
+                } = await presignedUrlResponse.json();
+
+                // 2. Upload the file directly to S3 using the presigned URL
+                const uploadResponse = await fetch(uploadUrl, {
+                    method: "PUT",
+                    body: file,
+                    headers: {
+                        "Content-Type": file.type,
+                    },
+                });
+
+                if (!uploadResponse.ok) {
+                    throw new Error("Failed to upload to S3");
                 }
+
+                mediaId = newMediaId;
             }
 
-            // Now create the post
-            const postResponse = await fetch('/api/post', {
-                method: 'POST',
+            // 3. Create the post with the media ID
+            const postResponse = await fetch("/api/post", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     body: postBody,
-                    image: mediaId, // Use the media ID if available
-                    type: 'post', // Change this to whatever type you need
+                    image: mediaId,
+                    type: "post",
                 }),
             });
 
             const postData = await postResponse.json();
             if (postData.success) {
-                closeModal(); // Close the modal on success
+                closeModal();
             } else {
-                console.error("Post creation failed:", postData.error);
+                throw new Error(postData.error || "Failed to create post");
             }
         } catch (error) {
             console.error("Error during submission:", error);
+            alert("Failed to create post. Please try again.");
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -90,20 +112,24 @@ const Modal: React.FC = () => {
 
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
-                    {/* Background Overlay */}
-                    <div className="fixed inset-0 bg-black bg-opacity-50" onClick={closeModal}></div>
+                    <div
+                        className="fixed inset-0 bg-black bg-opacity-50"
+                        onClick={closeModal}
+                    ></div>
 
-                    {/* Modal Container */}
                     <div className="relative bg-white w-full max-w-lg rounded-lg shadow-lg p-6">
-                        {/* Header */}
                         <div className="flex justify-between items-center border-b pb-3">
-                            <h2 className="text-lg font-semibold">Create a Post</h2>
-                            <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
+                            <h2 className="text-lg font-semibold">
+                                Create a Post
+                            </h2>
+                            <button
+                                onClick={closeModal}
+                                className="text-gray-500 hover:text-gray-700"
+                            >
                                 &times;
                             </button>
                         </div>
 
-                        {/* Content */}
                         <div className="mt-4">
                             <p>What do you want to talk about?</p>
                             <textarea
@@ -111,10 +137,9 @@ const Modal: React.FC = () => {
                                 rows={4}
                                 placeholder="Write something..."
                                 value={postBody}
-                                onChange={(e) => setPostBody(e.target.value)} // Update post body state
+                                onChange={(e) => setPostBody(e.target.value)}
                             ></textarea>
 
-                            {/* Media Preview */}
                             {previewUrl && (
                                 <div className="mt-4">
                                     <img
@@ -126,12 +151,11 @@ const Modal: React.FC = () => {
                             )}
                         </div>
 
-                        {/* Footer */}
                         <div className="flex justify-between items-center mt-4">
-                            {/* Add Media Button */}
                             <button
                                 onClick={triggerFileInput}
                                 className="flex items-center text-gray-600 hover:text-gray-800"
+                                disabled={isUploading}
                             >
                                 <svg
                                     className="w-6 h-6 mr-2"
@@ -149,7 +173,6 @@ const Modal: React.FC = () => {
                                 </svg>
                                 Add Media
                             </button>
-                            {/* Hidden File Input */}
                             <input
                                 type="file"
                                 ref={fileInputRef}
@@ -158,19 +181,20 @@ const Modal: React.FC = () => {
                                 onChange={handleFileSelect}
                             />
 
-                            {/* Post and Cancel Buttons */}
                             <div>
                                 <button
                                     onClick={closeModal}
                                     className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 mr-2"
+                                    disabled={isUploading}
                                 >
                                     Cancel
                                 </button>
                                 <button
-                                    onClick={handlePostSubmit} // Call post submit handler
-                                    className="px-4 py-2 bg-[#1CBCEE] text-white rounded-lg hover:bg-[#1CBCEE]/90"
+                                    onClick={handlePostSubmit}
+                                    className="px-4 py-2 bg-[#1CBCEE] text-white rounded-lg hover:bg-[#1CBCEE]/90 disabled:opacity-50"
+                                    disabled={isUploading}
                                 >
-                                    Post
+                                    {isUploading ? "Uploading..." : "Post"}
                                 </button>
                             </div>
                         </div>
