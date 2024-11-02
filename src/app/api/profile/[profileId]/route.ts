@@ -3,7 +3,7 @@ import { media, posts, users } from "@/db/schema";
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
-import { and, eq } from "drizzle-orm";
+import { eq, and, notEq } from "drizzle-orm/sql/index";
 import { z } from "zod";
 
 const ParamsSchema = z.object({
@@ -54,19 +54,30 @@ export async function GET(
             );
         }
 
+        const userPosts = await dbClient.execute(
+            `SELECT * FROM posts WHERE "userId" = $1 AND type == 'post'`,
+            [profileId]
+        );
+        const galleryPosts = await dbClient.execute(
+            `SELECT * FROM posts WHERE "userId" = $1 AND type = 'post'`,
+            [profileId]
+        );
+
+        /*
         const userPosts = await dbClient
             .select()
             .from(posts)
             .where(eq(posts.userId, profile.id))
-            .where(notEq(posts.type,"post")); //change made to just show other posts
+            .where(notEq(posts.type, "post")); //change made to just show other posts
+            
 
         const galleryPosts = await dbClient
             .select()
             .from(posts)
-            .where(eq(posts.userId, userId))
+            .where(eq(posts.userId, profile.id))
             .where(eq(posts.type, "post"))
             .execute();
-
+            */
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
             .from(posts)
