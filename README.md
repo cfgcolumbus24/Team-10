@@ -6,3 +6,4 @@
 ### Alana Gorukanti (OSU, Sophomore)
 ### Harith Madani (OSU)
 ### Shivanshi Tandon(UC Berkley, Junior)
+### Emerson Frasure (OSU, Junior)
