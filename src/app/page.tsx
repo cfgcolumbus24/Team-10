@@ -12,6 +12,7 @@ import { use, useEffect, useState } from "react";
 
 import Modal from "@/components/ui/Modal";
 import Navbar from "../components/ui/Navbar";
+import { ChevronRight } from "lucide-react";
 
 export default function Home() {
     useEffect(() => {
@@ -25,9 +26,11 @@ export default function Home() {
         contact?: string;
         picUrl?: string;
     }>({});
+
     const [explore, setExplore] = useState<
         { id: string; name: string; bio: string; pic: string; picUrl: string }[]
     >([]);
+
 
     const handleSignOut = async () => {
         try {
@@ -90,6 +93,7 @@ export default function Home() {
     }, []);
 
     return (
+      <div>
         <div className="">
             <Navbar />
 
@@ -210,7 +214,7 @@ export default function Home() {
                 </div>
 
                 {/* right panel - connect with other  */}
-                <div className="w-[25%]">
+                <div className="w-[25%] gap-4 pb-4">
                     <Card className="">
                         <CardHeader>
                             <CardTitle className="text-2xl">
@@ -244,8 +248,61 @@ export default function Home() {
                             ))}
                         </CardContent>
                     </Card>
+              <div className="h-6"></div>
+              { profile.name && 
+              <div className ="gap-4">
+              <Card>
+                  <CardContent className="flex flex-col p-4 space-y-2">
+                    {feed.map((post) => (
+                      <a
+                        className="flex flex-col group border-b border-gray-200 pb-2 last:border-b-0"
+                        key={post['id']}
+                        href={`/profile/${post['body']}`}
+                      >
+                        <div className="font-semibold text-lg group-hover:text-gray-700">
+                          {post['body']}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {post['body']} 
+                        </div>
+                      </a>
+                    ))}
+                    <a href="/" className="text-gray-400 text-sm mt-4 flex items-center">
+                      View more LMCC Events
+                      <ChevronRight className="ml-1 w-4 h-4" />
+                    </a>
+                  </CardContent>
+                  </Card>
+                  <div className="h-6"></div>
+                  <Card>
+                  <CardContent className="flex flex-col p-4 space-y-2">
+                  {feed.map((post) => (
+                    <a
+                      className="flex flex-col group border-b border-gray-200 pb-2 last:border-b-0"
+                      key={post['id']}
+                      href={`/profile/${post['body']}`}
+                    >
+                      <div className="font-semibold text-lg group-hover:text-gray-700">
+                        {post['body']}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {post['body']}
+                      </div>
+                    </a>
+                  ))}
+                  <a href="/" className="text-gray-400 text-sm mt-4 flex items-center">
+                    View more LMCC Job Postings
+                    <ChevronRight className="ml-1 w-4 h-4" />
+                  </a>
+                </CardContent>
+                </Card>
+               </div>
+              }
                 </div>
             </div>
         </div>
+        </div>
     );
+
 }
+
