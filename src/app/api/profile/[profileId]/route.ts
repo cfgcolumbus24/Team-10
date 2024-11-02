@@ -3,8 +3,9 @@ import { media, posts, users } from "@/db/schema";
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
-import { eq} from "drizzle-orm/sql/index";
+import { eq, and} from "drizzle-orm/sql/index";
 import { z } from "zod";
+import { ne } from "drizzle-orm";
 
 const ParamsSchema = z.object({
     profileId: z.coerce.number(),
@@ -54,27 +55,13 @@ export async function GET(
             );
         }
 
-        /*
-        const userPosts = await dbClient.execute(
-            `SELECT * FROM posts WHERE "userId" = $1 AND type != 'post'`,
-            [profileId]
-        );
-        const galleryPosts = await dbClient.execute(
-            `SELECT * FROM posts WHERE "userId" = $1 AND type == 'post'`,
-            [profileId]
-        );
-        */
 
         
-        const userPosts = await dbClient.execute(
-            `SELECT * FROM posts WHERE "userId" = $1 AND type != 'post'`,
-            [profileId]
-        );
+        const userPosts = await dbClient
+            .select()
+            .from(posts)
+            .where(and(eq(posts.userId, profile.id), ne(posts.type, "post")));
 
-        const galleryPosts = await dbClient.execute(
-            `SELECT * FROM posts WHERE "userId" = $1 AND type = 'post'`,
-            [profileId]
-        );
         
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
