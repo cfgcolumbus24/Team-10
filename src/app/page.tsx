@@ -25,6 +25,30 @@ export default function Home() {
         { id: string; name: string; bio: string; pic: string; picUrl: string }[]
     >([]);
 
+    const handleSignOut = async () => {
+        try {
+            const response = await fetch('/api/auth/signout', { // Adjust the path based on your API structure
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+            console.log(data)
+    
+            if (data.success) {
+                // Redirect to sign-in page if sign-out is successful
+                window.location.href = '/';
+            } else {
+                // Handle sign-out error (you might want to display this to the user)
+                console.error('Sign out error:', data.error);
+            }
+        } catch (error) {
+            console.error('Error during sign out:', error);
+        }
+    };
+
     useEffect(() => {
         async function fetchPosts() {
             const response = await fetch("/api/feed");
@@ -69,8 +93,8 @@ export default function Home() {
             <div className="w-full flex-auto content-center items-start justify-center flex p-20 space-x-8 ">
                 {profile && profile.name ? (
                     <div className="w-[25%]">
-                        <a href="/profile">
-                            <Card className="gap-0 group">
+                        <Card className="gap-0 group">
+                            <a href="/profile">
                                 <div className="flex items-center justify-center pt-4 pb-0">
                                     <Avatar className="items-center justify-center align-center w-32 h-32 object-cover clip-content">
                                         <AvatarImage
@@ -93,8 +117,16 @@ export default function Home() {
                                         </CardDescription>
                                     </CardHeader>
                                 </div>
-                            </Card>
-                        </a>
+                            </a>
+                            <div className="flex justify-center mb-4">
+                                <button
+                                    className="px-4 py-2 bg-[#F3686B] self-center hover:bg-gray-100 text-white rounded"
+                                    onClick={handleSignOut}
+                                >
+                                        Sign Out
+                                </button>
+                            </div>
+                        </Card>
                     </div>
                 ) : (
                     <div className="w-[25%]">
