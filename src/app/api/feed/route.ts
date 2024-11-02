@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { posts, users } from "@/db/schema";
-
 import { ApiResponse } from "@/app/api/common";
 import { dbClient } from "@/db/client";
+import { users, posts } from "@/db/schema";
 import { z } from "zod";
-import { desc, eq } from "../../../../node_modules/drizzle-orm/sql/index";
+import { desc, eq } from "drizzle-orm/sql/index";
 
+// Define the schema for filtering posts by type
 const FeedTypeQuery = z.object({
     typeOnlyFeed: z.enum(["opportunity", "post", "event", "admin"]).optional(),
 });
@@ -14,7 +14,7 @@ export async function GET(
     request: NextRequest
 ): Promise<NextResponse<ApiResponse>> {
     try {
-        // Fine parameters needed
+        // Extract query parameters
         const { searchParams } = new URL(request.url);
         const typeOnlyFeed = searchParams.get("typeOnlyFeed");
 
@@ -36,7 +36,7 @@ export async function GET(
         // Get the authenticated user's ID from the request context
         const userId = "1"; // Replace with the actual authenticated user ID
 
-        // Build the query to get the user profile and posts
+        // Build the query to get the user profile
         const userProfile = await dbClient
             .select()
             .from(users)
@@ -55,7 +55,7 @@ export async function GET(
             );
         }
 
-        // Get posts for the user, optionally filtering by post type
+        // Build the query to get posts for the user
         const postsQuery = dbClient
             .select()
             .from(posts)
@@ -63,10 +63,11 @@ export async function GET(
             .orderBy(desc(posts.timestamp)); // Sort by most recent first
 
         // If a post type is specified, filter by it
-        if (validatedQuery.data.postType) {
+        if (validatedQuery.data.typeOnlyFeed) {
             postsQuery.where(eq(posts.type, validatedQuery.data.typeOnlyFeed));
-        } // cant do this, you're running a query on results
+        }
 
+        // Execute the posts query
         const userPosts = await postsQuery.execute();
 
         // Combine profile and posts into the response
