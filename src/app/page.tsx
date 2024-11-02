@@ -253,8 +253,7 @@ export default function Home() {
                           {feed.filter((e) => e.type == "opportunity" ).map((event) => (
                             <a
                               className="flex flex-col group border-b border-gray-200 pb-2 last:border-b-0"
-                              key={event.type}
-                              href={`/events/${event.id}`}
+                              key={event.id}
                             >
                               <div className="font-semibold text-lg group-hover:text-gray-700">
                                 Job Posting
@@ -277,8 +276,7 @@ export default function Home() {
                           {feed.filter((e) => e.type == "event" ).map((event) => (
                             <a
                               className="flex flex-col group border-b border-gray-200 pb-2 last:border-b-0"
-                              key={event.type}
-                              href={`/events/${event.id}`}
+                              key={event.id}
                             >
                               <div className="font-semibold text-lg group-hover:text-gray-700">
                                 LMCC Events
