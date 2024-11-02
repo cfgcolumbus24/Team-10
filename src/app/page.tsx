@@ -19,7 +19,7 @@ import SearchForm from "@/components/ui/SearchForm";
 
 export default function Home() {
     const [feed, setFeed] = useState([]);
-    const [profile, setProfile] = useState([]);
+    const [profile, setProfile] = useState<{ name?: string; bio?: string; contact?: string }>({});
 
     useEffect(() => {
         async function fetchPosts() {
