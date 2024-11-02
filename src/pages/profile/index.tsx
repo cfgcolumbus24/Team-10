@@ -4,7 +4,7 @@ import ContactCard from "../../components/ui/ContactCard"
 import ProfileCard from "../../components/ui/ProfileCard"
 export default function index() {
   return (
-    <div className="flex p-4">
+    <div className="flex p-4 gap-x-4 mr-32 ml-32">
       <ProfileCard
           firstName="John"
           lastName="Doe"
