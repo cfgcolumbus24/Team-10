@@ -6,13 +6,10 @@ import SearchForm from "@/components/ui/SearchForm";
 import InputField from "@/components/ui/InputField";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-<<<<<<< Updated upstream
 import { use, useEffect, useState } from "react";
-=======
 import Modal from "@/components/ui/Modal";
 import AddMediaModal from "@/components/ui/AddMediaModal";
 
->>>>>>> Stashed changes
 
 export default function Home() {
   const [feed, setFeed] = useState([]);
@@ -57,11 +54,6 @@ export default function Home() {
 
         {/* middle panel - make a post and post feed below it */}
         <div className="w-[40%] space-y-8">
-<<<<<<< Updated upstream
-          <Card className="" key="createpost">
-            <CardHeader>
-              <SearchForm message="Create a post" />
-=======
           <Card className="">
             <CardHeader className= "flex flex-row gap-3">
             <Avatar className="items-center justify-center align-center w-12 h-12">
@@ -69,7 +61,6 @@ export default function Home() {
                 <AvatarFallback>PFP</AvatarFallback>
             </Avatar>
             <Modal></Modal>  
->>>>>>> Stashed changes
             </CardHeader>
           </Card>
           {feed.map((post) => (
