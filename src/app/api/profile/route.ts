@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { and, ne } from "drizzle-orm";
 import { media, posts, users } from "@/db/schema"; // Import your schemas
 
 import { ApiResponse } from "@/app/api/common";
@@ -46,8 +47,7 @@ export const GET = withAuth(async (req, auth) => {
         const userPosts = await dbClient
             .select()
             .from(posts)
-            .where(and(eq(posts.userId, profile.id), notEq(posts.type, "post"))); //change made to just show other posts
-            
+            .where(and(eq(posts.userId, profile.id), ne(posts.type, "post"))); //change made to just show other posts
 
         const galleryPosts = await dbClient
             .select()
