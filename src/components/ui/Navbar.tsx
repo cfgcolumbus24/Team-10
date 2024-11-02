@@ -1,15 +1,61 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import React from "react";
 import { Search } from "lucide-react";
 import SearchForm from "./SearchForm";
 import { useRouter } from "next/compat/router";
 
 export default function Navbar() {
     const router = useRouter();
+
+    const handleSignOut = async () => {
+        try {
+            const response = await fetch("/api/auth/signout", {
+                // Adjust the path based on your API structure
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            const data = await response.json();
+            console.log(data);
+
+            if (data.success) {
+                // Redirect to sign-in page if sign-out is successful
+                window.location.href = "/";
+            } else {
+                // Handle sign-out error (you might want to display this to the user)
+                console.error("Sign out error:", data.error);
+            }
+        } catch (error) {
+            console.error("Error during sign out:", error);
+        }
+    };
+
+    const [profile, setProfile] = useState<{
+        name?: string;
+        bio?: string;
+        contact?: string;
+        picUrl?: string;
+    } | null>(null);
+
+    useEffect(() => {
+        async function fetchProfile() {
+            const response = await fetch("/api/profile");
+            const result = await response.json();
+            console.log(result);
+            if (result.success) {
+                setProfile(result.data.profile);
+                console.log(result.data.profile);
+            }
+        }
+        fetchProfile();
+    }, []);
 
     return (
         <>
@@ -125,7 +171,18 @@ export default function Navbar() {
                                 </div>
                             </div>
                         </div>
-                        <SearchForm message="Searching for Events, Artists, and Jobs" />
+                        <div className="flex flex-row gap-4">
+                            <SearchForm message="Searching for Events, Artists, and Jobs" />
+                            {!!profile && (
+                                <button
+                                    className="px-4 py-2 border border-transparent bg-[#F3686B] text-white rounded transition-all duration-300 
+               hover:bg-white hover:border-[#F3686B] hover:text-[#F3686B]"
+                                    onClick={handleSignOut}
+                                >
+                                    Sign Out
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
                 <div className="sm:hidden" id="mobile-menu">
