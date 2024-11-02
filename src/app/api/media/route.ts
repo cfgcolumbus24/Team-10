@@ -7,12 +7,9 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { media } from "@/db/schema";
 import { s3Client } from "@/aws/s3Client";
 import { withAuth } from "@/lib/auth";
-import { z } from "zod";
-
-const PostSchema = z.object({});
 
 export const POST = withAuth(
-    async (request, auth): Promise<NextResponse<ApiResponse>> => {
+    async (_, auth): Promise<NextResponse<ApiResponse>> => {
         try {
             if (!auth || !auth.user.id) {
                 return NextResponse.json(
@@ -23,23 +20,6 @@ export const POST = withAuth(
                     { status: 400 }
                 );
             }
-
-            const body = await request.json();
-
-            const result = PostSchema.safeParse(body);
-            if (!result.success) {
-                return NextResponse.json(
-                    {
-                        success: false,
-                        error: "Invalid data",
-                    },
-                    {
-                        status: 400,
-                    }
-                );
-            }
-
-            const validatedData = result.data;
 
             const objectId = csprng(256, 16);
             const command = new PutObjectCommand({
