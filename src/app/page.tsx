@@ -3,9 +3,13 @@
 import Image from "next/image";
 import Navbar from "../components/ui/Navbar";
 import SearchForm from "@/components/ui/SearchForm";
+import InputField from "@/components/ui/InputField";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { use, useEffect, useState } from "react";
+import Modal from "@/components/ui/Modal";
+import AddMediaModal from "@/components/ui/AddMediaModal";
+
 
 export default function Home() {
   const [feed, setFeed] = useState([]);
@@ -27,10 +31,12 @@ export default function Home() {
   return (
     <div className="">
       <Navbar />
+
+      {/* left panel - profile info */}
       <div className="w-full flex-auto content-center items-start justify-center flex p-20 space-x-8">
         <div className="w-[25%]">
-          <Card className="">
-            <div className="flex items-center justify-center pt-4">
+          <Card className="gap-0">
+            <div className="flex items-center justify-center pt-4 pb-0">
               <Avatar className="items-center justify-center align-center w-16 h-16">
                 <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover" />
                 <AvatarFallback>PFP</AvatarFallback>
@@ -45,17 +51,23 @@ export default function Home() {
 
           </Card>
         </div>
+
+        {/* middle panel - make a post and post feed below it */}
         <div className="w-[40%] space-y-8">
-          <Card className="" key="createpost">
-            <CardHeader>
-              <SearchForm message="Create a post" />
+          <Card className="">
+            <CardHeader className= "flex flex-row gap-3">
+            <Avatar className="items-center justify-center align-center w-12 h-12">
+                <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover"/>
+                <AvatarFallback>PFP</AvatarFallback>
+            </Avatar>
+            <Modal></Modal>  
             </CardHeader>
           </Card>
           {feed.map((post) => (
             <Card key={post["id"]} className="">
               <CardHeader>
                 <Avatar>
-                  <AvatarImage src={`https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_${post.userId}.png`} />
+                  <AvatarImage src={`https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_${post["userId"]}.png`} />
                   <AvatarFallback>{post["image"]}</AvatarFallback>
                 </Avatar>
                 <CardTitle>hi</CardTitle>
@@ -69,6 +81,8 @@ export default function Home() {
             <CardHeader>Hello, this is a post</CardHeader>
           </Card>
         </div>
+
+        {/* right panel - connect with other  */}
         <div className="w-[25%]">
           <Card className="">
             <CardHeader>

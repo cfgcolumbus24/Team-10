@@ -6,7 +6,7 @@ import { withAuth } from "@/lib/auth";
 import { z } from "zod";
 
 const PostSchema = z.object({
-    image: z.number(),
+    image: z.number().nullable(),
     body: z.string(),
     type: z.enum(["post", "opportunity", "event", "admin"]),
 });
