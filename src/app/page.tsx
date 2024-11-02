@@ -22,8 +22,8 @@ export default function Home() {
       console.log(result);
       if (result.success) {
         setFeed(result.data.posts);
+        console.log(result.data.posts);
       }
-      console.log(result.data.posts);
     }
 
     async function fetchProfile() {
@@ -32,8 +32,8 @@ export default function Home() {
       console.log(result);
       if (result.success) {
         setProfile(result.data.profile);
+        console.log(result.data.profile);
       }
-      console.log(result.data.profile);
     }
 
     fetchPosts();
@@ -46,36 +46,56 @@ export default function Home() {
 
       {/* left panel - profile info */}
       <div className="w-full flex-auto content-center items-start justify-center flex p-20 space-x-8">
-        <div className="w-[25%]">
-          <Card className="gap-0">
-            <div className="flex items-center justify-center pt-4 pb-0">
-              <Avatar className="items-center justify-center align-center w-32 h-32">
-                <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover" />
-                <AvatarFallback>PFP</AvatarFallback>
-              </Avatar>
-            </div>
-            <div className="text-center align-center gap-0">
-              <CardHeader>
-                <CardTitle className="text-4xl">{profile.name}</CardTitle>
-                <CardDescription className="text-xl">{profile.bio}</CardDescription>
-                <CardDescription className="text-2xl">{profile.contact}</CardDescription>
-              </CardHeader>
-            </div>
-
-          </Card>
-        </div>
+        {profile && profile.name ? (
+          <div className="w-[25%]">
+            <Card className="gap-0">
+              <div className="flex items-center justify-center pt-4 pb-0">
+          <Avatar className="items-center justify-center align-center w-32 h-32">
+            <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover" />
+            <AvatarFallback>PFP</AvatarFallback>
+          </Avatar>
+              </div>
+              <div className="text-center align-center gap-0">
+          <CardHeader>
+            <CardTitle className="text-4xl">{profile.name}</CardTitle>
+            <CardDescription className="text-xl">{profile.bio}</CardDescription>
+            <CardDescription className="text-2xl">{profile.contact}</CardDescription>
+          </CardHeader>
+              </div>
+            </Card>
+          </div>
+        ) : (
+          <div className="w-[25%]">
+            <Card className="gap-0">
+              <div className="text-center align-center gap-0">
+          <CardHeader>
+            <CardTitle className="text-4xl">Sign In</CardTitle>
+            <CardDescription className="text-xl">Please sign in to view your profile</CardDescription>
+            <button
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+              onClick={() => window.location.href = "/auth/signin"}
+            >
+              Sign In
+            </button>
+          </CardHeader>
+              </div>
+            </Card>
+          </div>
+        )}
 
         {/* middle panel - make a post and post feed below it */}
         <div className="w-[40%] space-y-8">
-          <Card className="">
-            <CardHeader className="flex flex-row gap-3">
-              <Avatar className="items-center justify-center align-center w-16 h-16">
-                <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover" />
-                <AvatarFallback>PFP</AvatarFallback>
-              </Avatar>
-              <Modal></Modal>
-            </CardHeader>
-          </Card>
+          {profile && profile.name ? (
+            <Card className="">
+              <CardHeader className="flex flex-row gap-3">
+                <Avatar className="items-center justify-center align-center w-16 h-16">
+                  <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover" />
+                  <AvatarFallback>PFP</AvatarFallback>
+                </Avatar>
+                <Modal></Modal>
+              </CardHeader>
+            </Card>
+          ) : null}
           {feed.map((post) => (
             <Card key={post["id"]} className="">
               <CardHeader>
@@ -101,7 +121,9 @@ export default function Home() {
         <div className="w-[25%]">
           <Card className="">
             <CardHeader>
-              <CardTitle className="text-2xl">Connect with others</CardTitle>
+              <CardTitle className="text-2xl">
+                {profile && profile.name ? "Connect with others" : "Explore others"}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-rows-3 grid-flow-col gap-1">
