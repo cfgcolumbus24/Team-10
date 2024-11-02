@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/card";
 import { use, useEffect, useState } from "react";
 
+import { ChevronRight } from "lucide-react";
 import Footer from "@/components/ui/Footer";
 import Modal from "@/components/ui/Modal";
 import Navbar from "@/components/ui/Navbar";
-import { ChevronRight } from "lucide-react";
 
 export default function Home() {
     useEffect(() => {
@@ -30,31 +30,6 @@ export default function Home() {
     const [explore, setExplore] = useState<
         { id: string; name: string; bio: string; pic: string; picUrl: string }[]
     >([]);
-
-    const handleSignOut = async () => {
-        try {
-            const response = await fetch("/api/auth/signout", {
-                // Adjust the path based on your API structure
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
-            const data = await response.json();
-            console.log(data);
-
-            if (data.success) {
-                // Redirect to sign-in page if sign-out is successful
-                window.location.href = "/";
-            } else {
-                // Handle sign-out error (you might want to display this to the user)
-                console.error("Sign out error:", data.error);
-            }
-        } catch (error) {
-            console.error("Error during sign out:", error);
-        }
-    };
 
     useEffect(() => {
         async function fetchPosts() {
@@ -122,15 +97,7 @@ export default function Home() {
                                     </CardHeader>
                                 </div>
                             </a>
-                            <div className="flex justify-center mb-4">
-                                <button
-                                    className="px-4 py-2 border border-transparent bg-[#F3686B] text-white rounded transition-all duration-300 
-               hover:bg-white hover:border-[#F3686B] hover:text-[#F3686B]"
-                                    onClick={handleSignOut}
-                                >
-                                    Sign Out
-                                </button>
-                            </div>
+                            <div className="flex justify-center mb-4"></div>
                         </Card>
                     </div>
                 ) : (
@@ -245,59 +212,68 @@ export default function Home() {
                         </CardContent>
                     </Card>
                     <div className="h-8"></div>
-                    {profile.name && 
-                    // view the job postings and events
-                    <div>
-                      <Card>
-                        <CardContent className="flex flex-col p-4 space-y-2">
-                          {feed.filter((e) => e.type == "opportunity" ).map((event) => (
-                            <a
-                              className="flex flex-col group border-b border-gray-200 pb-2 last:border-b-0"
-                              key={event.id}
-                            >
-                              <div className="font-semibold text-lg group-hover:text-gray-700">
-                                Job Posting
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                {event.body} | {event.image}
-                              </div>
-                            </a>
-                          ))}
-                          <a href="/" className="text-gray-400 text-sm mt-4 flex items-center">
-                            View more LMCC Job Opportunities
-                            <ChevronRight className="ml-1 w-4 h-4" />
-                          </a>
-                        </CardContent>
-                    </Card>
+                    {profile.name && (
+                        // view the job postings and events
+                        <div>
+                            <Card>
+                                <CardContent className="flex flex-col p-4 space-y-2">
+                                    {feed
+                                        .filter((e) => e.type == "opportunity")
+                                        .map((event) => (
+                                            <a
+                                                className="flex flex-col group border-b border-gray-200 pb-2 last:border-b-0"
+                                                key={event.id}
+                                            >
+                                                <div className="font-semibold text-lg group-hover:text-gray-700">
+                                                    Job Posting
+                                                </div>
+                                                <div className="text-sm text-gray-500">
+                                                    {event.body} | {event.image}
+                                                </div>
+                                            </a>
+                                        ))}
+                                    <a
+                                        href="/"
+                                        className="text-gray-400 text-sm mt-4 flex items-center"
+                                    >
+                                        View more LMCC Job Opportunities
+                                        <ChevronRight className="ml-1 w-4 h-4" />
+                                    </a>
+                                </CardContent>
+                            </Card>
 
-                    <div className="h-8"></div>
-                    <Card>
-                        <CardContent className="flex flex-col p-4 space-y-2">
-                          {feed.filter((e) => e.type == "event" ).map((event) => (
-                            <a
-                              className="flex flex-col group border-b border-gray-200 pb-2 last:border-b-0"
-                              key={event.id}
-                            >
-                              <div className="font-semibold text-lg group-hover:text-gray-700">
-                                LMCC Events
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                {event.body} | {event.image}
-                              </div>
-                            </a>
-                          ))}
-                          <a href="/" className="text-gray-400 text-sm mt-4 flex items-center">
-                            View more LMCC Events
-                            <ChevronRight className="ml-1 w-4 h-4" />
-                          </a>
-                        </CardContent>
-                    </Card>
-                    </div>
-                    } 
-                    
+                            <div className="h-8"></div>
+                            <Card>
+                                <CardContent className="flex flex-col p-4 space-y-2">
+                                    {feed
+                                        .filter((e) => e.type == "event")
+                                        .map((event) => (
+                                            <a
+                                                className="flex flex-col group border-b border-gray-200 pb-2 last:border-b-0"
+                                                key={event.id}
+                                            >
+                                                <div className="font-semibold text-lg group-hover:text-gray-700">
+                                                    LMCC Events
+                                                </div>
+                                                <div className="text-sm text-gray-500">
+                                                    {event.body} | {event.image}
+                                                </div>
+                                            </a>
+                                        ))}
+                                    <a
+                                        href="/"
+                                        className="text-gray-400 text-sm mt-4 flex items-center"
+                                    >
+                                        View more LMCC Events
+                                        <ChevronRight className="ml-1 w-4 h-4" />
+                                    </a>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    )}
                 </div>
             </div>
-            
+
             <Footer />
         </div>
     );
