@@ -44,7 +44,7 @@ export const POST = withAuth(
             await dbClient.insert(posts).values({
                 userId: auth.user.id,
                 body: validatedData.body,
-                image: 456,
+                image: validatedData.image,
                 type: validatedData.type,
             });
 
