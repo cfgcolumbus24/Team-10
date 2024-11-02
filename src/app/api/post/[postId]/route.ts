@@ -1,6 +1,5 @@
 import { and, eq } from "drizzle-orm";
 
-import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
 import { posts } from "@/db/schema";
