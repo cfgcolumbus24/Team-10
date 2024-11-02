@@ -78,7 +78,7 @@ export async function GET(
             data: {
                 message: "Hello world!",
                 profile,
-                galleryPosts
+                galleryPosts,
                 userPosts,
                 userMedia,
             },
