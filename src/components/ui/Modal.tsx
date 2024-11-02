@@ -102,10 +102,10 @@ const Modal: React.FC = () => {
     };
 
     return (
-        <div className="flex justify-center items-center">
+        <div className="flex flex-row gap-4 justify-center items-center">
             <button
                 onClick={openModal}
-                className="px-4 py-2 bg-[#1CBCEE] text-white rounded-lg hover:bg-[#1CBCEE]/90"
+                className="px-4 py-2 bg-[#1CBCEE] text-2xl text-white rounded-lg hover:bg-[#1CBCEE]/90"
             >
                 Create a Post
             </button>
