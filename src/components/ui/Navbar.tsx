@@ -54,7 +54,7 @@ export default function Navbar() {
               </button>
             </div>
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-              <div className="flex flex-shrink-0 items-center">
+              <div className="flex flex-shrink-0 items-center text-white">
                 <Image
                   className="h-8 w-auto"
                   src="/LMCC_logo.png"
@@ -62,34 +62,28 @@ export default function Navbar() {
                   width={32} // Specify width
                   height={32} // Specify height
                 />
+                <div className="ml-2">
+                  Lower Manhattan Cultural Council Inc.
+                </div>
               </div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
-                  <a
+                <a
                     href="#"
-                    className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
-                    aria-current="page"
+                    className="rounded-md px-1 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
-                    Dashboard
-                  </a>
-                  <a
-                    href="#"
-                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                  >
-                    Team
-                  </a>
-                  <a
-                    href="#"
-                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                  >
-                    Projects
-                  </a>
-                  <a
-                    href="#"
-                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                  >
-                    Calendar
-                  </a>
+                  <svg className="w-6 h-6 mb-1" fill="white" viewBox="0 0 24 24">
+                    <path d="M12 3l9 9h-3v9H6v-9H3l9-9z" />
+                  </svg>
+                </a>
+                <a
+                  href="#"
+                  className="rounded-md px-1 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                >
+                  <svg className="w-6 h-6 mb-1 text-white" fill="white" viewBox="0 0 24 24">
+                    <path d="M12 2a2 2 0 00-2 2v1c-1.74 0-3.28.79-4.2 2.01A5.978 5.978 0 005 11v6l-1 1v1h16v-1l-1-1v-6a5.978 5.978 0 00-2.8-5.99A5.976 5.976 0 0014 5V4a2 2 0 00-2-2zM5 17h14v-6c0-2.21-1.79-4-4-4H9c-2.21 0-4 1.79-4 4v6zM12 20c1.1 0 2-.9 2-2H10c0 1.1.9 2 2 2z" />
+                  </svg>
+                </a>
                 </div>
               </div>
             </div>
@@ -103,25 +97,13 @@ export default function Navbar() {
               className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
               aria-current="page"
             >
-              Dashboard
+              Home
             </a>
             <a
               href="#"
               className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
             >
-              Team
-            </a>
-            <a
-              href="#"
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
-              Projects
-            </a>
-            <a
-              href="#"
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
-              Calendar
+              Notifications
             </a>
           </div>
         </div>
