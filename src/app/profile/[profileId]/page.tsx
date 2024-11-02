@@ -24,6 +24,7 @@ interface GalleryPost {
     image: number;
     type: "post";
     timestamp: string;
+    resourceUrl: string;
 }
 
 interface UserMedia {
@@ -82,7 +83,10 @@ export default function Index() {
                                         <div className="flex items-center space-x-4">
                                             <Avatar className="items-center justify-center align-center w-16 h-16">
                                                 <AvatarImage
-                                                    src={profile.profile.picUrl}
+                                                    src={
+                                                        profile.profile
+                                                            .picUrl || ""
+                                                    }
                                                 />
                                                 <AvatarFallback>
                                                     UA

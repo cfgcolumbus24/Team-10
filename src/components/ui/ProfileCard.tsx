@@ -6,11 +6,11 @@ import { MdPersonAdd } from "react-icons/md";
 import React from "react";
 
 interface ProfileCardProps {
-    name: string;
-    bio: string;
-    resourceUrl: string;
-    contact: string;
-    addButton: boolean;
+    name: string | undefined | null;
+    bio: string | undefined | null;
+    resourceUrl: string | undefined | null;
+    contact: string | undefined | null;
+    addButton: boolean | undefined | null;
 }
 
 export default function ProfileCard({
@@ -26,7 +26,7 @@ export default function ProfileCard({
             <div className="flex-shrink-0">
                 <Avatar className="items-center justify-center align-center w-32 h-32">
                     <AvatarImage
-                        src={resourceUrl}
+                        src={resourceUrl || ""}
                         className="rounded-full object-cover"
                     />
                     <AvatarFallback>PFP</AvatarFallback>
