@@ -125,13 +125,6 @@ export default function Home() {
                     {profile && profile.name ? (
                         <Card className="">
                             <CardHeader className="flex flex-row gap-3">
-                                <Avatar className="items-center justify-center align-center w-16 h-16">
-                                    <AvatarImage
-                                        src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png"
-                                        className="rounded-full object-cover"
-                                    />
-                                    <AvatarFallback>PFP</AvatarFallback>
-                                </Avatar>
                                 <Modal></Modal>
                             </CardHeader>
                         </Card>
@@ -145,8 +138,8 @@ export default function Home() {
                             <Card>
                                 <CardHeader className="group-hover:text-gray-500">
                                     <div className="flex items-center space-x-4">
-                                        <Avatar className="items-center justify-center align-center w-16 h-16">
-                                            <AvatarImage
+                                        <Avatar className="items-center justify-center align-center w-16 h-16 object-cover clip-content">
+                                            <AvatarImage className="w-full h-full object-cover clip-content"
                                                 src={post["userPicResourceUrl"]}
                                             />
                                             <AvatarFallback>
@@ -160,7 +153,7 @@ export default function Home() {
                                 </CardHeader>
                                 <CardContent className="flex flex-col gap-4">
                                     {post["resourceUrl"] && (
-                                        <div className="flex flex-row items-center justify-center text-clip">
+                                        <div className="flex flex-row items-center justify-center text-clip object-cover clip-content">
                                             <img
                                                 className="rounded-md"
                                                 src={post["resourceUrl"]}
@@ -194,7 +187,7 @@ export default function Home() {
                                     href={`/profile/${stuff.id}`}
                                 >
                                     <div>
-                                        <Avatar className="w-16 h-16">
+                                        <Avatar className="w-16 h-16 object-cover">
                                             <AvatarImage src={stuff.picUrl} />
                                             <AvatarFallback>CN</AvatarFallback>
                                         </Avatar>
