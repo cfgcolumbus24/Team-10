@@ -46,6 +46,10 @@ interface ApiResponse {
     data: ApiResponseData;
 }
 
+export const metadata: Metadata = {
+    title: "Profile :: AlumNet",
+};
+
 export default function Index() {
     const params = useParams();
     const [profile, setProfile] = useState<ApiResponseData | null>(null);

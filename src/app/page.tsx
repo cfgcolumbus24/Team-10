@@ -13,6 +13,10 @@ import { use, useEffect, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import Navbar from "../components/ui/Navbar";
 
+export const metadata: Metadata = {
+    title: "Feed :: AlumNet",
+};
+
 export default function Home() {
     const [feed, setFeed] = useState([]);
     const [profile, setProfile] = useState<{

@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { CardContent, CardDescription } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 
+import { Metadata } from "next";
 import Navbar from "@/components/ui/Navbar";
 import ProfileCard from "@/components/ui/ProfileCard";
 
@@ -44,6 +45,10 @@ interface ApiResponse {
     success: boolean;
     data: ApiResponseData;
 }
+
+export const metadata: Metadata = {
+    title: "Profile :: AlumNet",
+};
 
 export default function Index() {
     const [profile, setProfile] = useState<ApiResponseData | null>(null);

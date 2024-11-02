@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import { User, Lock } from "lucide-react";
+import { Lock, User } from "lucide-react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 
 interface FormData {
     email: string;
@@ -20,16 +20,20 @@ interface ApiResponse {
     };
 }
 
+export const metadata: Metadata = {
+    title: "Sign In :: AlumNet",
+};
+
 const LoginForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const [formData, setFormData] = useState<FormData>({
         email: "",
-        password: ""
+        password: "",
     });
     const [formErrors, setFormErrors] = useState<FormErrors>({
         email: "",
-        password: ""
+        password: "",
     });
 
     const validateEmail = (email: string): string => {
@@ -52,36 +56,38 @@ const LoginForm: React.FC = () => {
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
 
         if (name === "email") {
-            setFormErrors(prev => ({
+            setFormErrors((prev) => ({
                 ...prev,
-                email: validateEmail(value)
+                email: validateEmail(value),
             }));
             setShowPassword(false);
-            setFormData(prev => ({
+            setFormData((prev) => ({
                 ...prev,
-                password: ""
+                password: "",
             }));
         } else if (name === "password") {
-            setFormErrors(prev => ({
+            setFormErrors((prev) => ({
                 ...prev,
-                password: validatePassword(value)
+                password: validatePassword(value),
             }));
         }
     };
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+    const handleSubmit = async (
+        e: FormEvent<HTMLFormElement>
+    ): Promise<void> => {
         e.preventDefault();
-        
+
         const emailError = validateEmail(formData.email);
-        setFormErrors(prev => ({
+        setFormErrors((prev) => ({
             ...prev,
-            email: emailError
+            email: emailError,
         }));
 
         if (emailError) {
@@ -94,9 +100,9 @@ const LoginForm: React.FC = () => {
         }
 
         const passwordError = validatePassword(formData.password);
-        setFormErrors(prev => ({
+        setFormErrors((prev) => ({
             ...prev,
-            password: passwordError
+            password: passwordError,
         }));
 
         if (passwordError) {
@@ -145,7 +151,9 @@ const LoginForm: React.FC = () => {
                 </h1>
 
                 {error && (
-                    <div className="text-red-500 text-sm text-center">{error}</div>
+                    <div className="text-red-500 text-sm text-center">
+                        {error}
+                    </div>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -196,9 +204,7 @@ const LoginForm: React.FC = () => {
                             />
                             <span>Remember me</span>
                         </label>
-                        <a
-                            className="text-blue-500 hover:underline"
-                        >
+                        <a className="text-blue-500 hover:underline">
                             Forgot Password?
                         </a>
                     </div>
