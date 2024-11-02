@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 
 const posts = [
@@ -11,6 +11,14 @@ const posts = [
 
 export default function PostCard() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsLargeScreen(window.innerWidth >= 1024);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex === 0 ? posts.length - 1 : prevIndex - 1));
@@ -36,13 +44,22 @@ export default function PostCard() {
       </button>
 
       <div className="flex gap-x-4">
-        {displayPosts.map((post, index) => (
-          <Card key={post.id} className={`min-w-[300px] ${index === 1 ? 'scale-100 opacity-100' : 'scale-90 opacity-50'}`}>
-            <CardHeader>
-              <CardTitle>{post.title}</CardTitle>
-            </CardHeader>
-          </Card>
-        ))}
+        {displayPosts.map((post, index) => {
+          const isMainPost = index === 1;
+          const style = isMainPost
+            ? "scale-100 opacity-100"
+            : isLargeScreen
+            ? "scale-95 opacity-60"
+            : "scale-90 opacity-40";
+
+          return (
+            <Card key={post.id} className={`min-w-[300px] ${style}`}>
+              <CardHeader>
+                <CardTitle>{post.title}</CardTitle>
+              </CardHeader>
+            </Card>
+          );
+        })}
       </div>
 
       <button onClick={handleNext} className="absolute right-0 p-2 text-gray-500 hover:text-gray-700" aria-label="Next post">
