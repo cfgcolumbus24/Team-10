@@ -54,11 +54,22 @@ export async function GET(
             );
         }
 
+        const userPosts = await dbClient.execute(
+            `SELECT * FROM posts WHERE "userId" = $1 AND type != 'post'`,
+            [profileId]
+        );
+        const galleryPosts = await dbClient.execute(
+            `SELECT * FROM posts WHERE "userId" = $1 AND type = 'post'`,
+            [profileId]
+        );
+
+        /*
         const userPosts = await dbClient
             .select()
             .from(posts)
             .where(eq(posts.userId, profile.id))
             .where(notEq(posts.type, "post")); //change made to just show other posts
+            
 
         const galleryPosts = await dbClient
             .select()
@@ -66,7 +77,7 @@ export async function GET(
             .where(eq(posts.userId, profile.id))
             .where(eq(posts.type, "post"))
             .execute();
-
+            */
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
             .from(posts)
