@@ -17,7 +17,7 @@ async function getRandomUsers(
             .from(follows)
             .where(eq(follows.followerId, currentUserId));
 
-        const followingIds = followingQuery.map((f) => f.followingId);
+        const followingIds = followingQuery.map((f: any) => f.followingId);
 
         // Add current user's ID to the exclusion list
         const excludeIds = [...followingIds, currentUserId];
@@ -52,8 +52,8 @@ async function getRandomUsers(
 export const GET = withAuth(async (req, auth) => {
     const responseData = await getRandomUsers(
         dbClient,
-        auth,
-        auth ? userId : undefined
+        !!auth,
+        auth ? auth.user.id : undefined
     );
 
     return NextResponse.json({
