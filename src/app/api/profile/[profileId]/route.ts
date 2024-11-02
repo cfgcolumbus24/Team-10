@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm/sql/index";
+import { and, eq } from "drizzle-orm";
 import { media, posts, users } from "@/db/schema"; // Import your schemas
 
 import { ApiResponse } from "@/app/api/common";
@@ -11,8 +11,6 @@ import { z } from "zod";
 const ParamsSchema = z.object({
     profileId: z.coerce.number(),
 });
-
-
 
 export const GET = withAuth(async (req, auth) => {
     try {
