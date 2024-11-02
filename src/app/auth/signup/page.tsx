@@ -191,14 +191,14 @@ const SignupForm = () => {
                     <button
                         type="submit"
                         disabled={isLoading || Object.keys(errors).length > 0}
-                        className="p-2.5 font-semibold bg-highlight text-foreground rounded-md hover:bg-highlight/80 disabled:bg-highlight/50 group"
+                        className="p-2.5 font-semibold bg-blue-300 text-foreground rounded-md hover:bg-blue-400 disabled:bg-blue-200 group"
                     >
                         <span className="flex flex-row items-center justify-between">
                             {isLoading
                                 ? "Loading..."
                                 : showPassword
-                                ? "Sign Up"
-                                : "Continue"}
+                                    ? "Sign Up"
+                                    : "Continue"}
                             <ChevronRight className="w-4 h-4 transition-transform duration-300 -translate-x-1 group-hover:translate-x-0" />
                         </span>
                     </button>

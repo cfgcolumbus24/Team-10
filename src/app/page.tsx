@@ -1,11 +1,29 @@
+"use client"
+
 import Image from "next/image";
 import Navbar from "../components/ui/Navbar";
 import SearchForm from "@/components/ui/SearchForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { use, useEffect, useState } from "react";
 
 export default function Home() {
+  const [feed, setFeed] = useState([]);
+
+  useEffect(() => {
+    async function fetchTasks() {
+      const response = await fetch("/api/feed");
+      const result = await response.json();
+      console.log(result);
+      if (result.success) {
+        setFeed(result.data.posts);
+      }
+      console.log(result.data.posts);
+    }
+
+    fetchTasks();
+  }, []);
+
   return (
     <div className="">
       <Navbar />
@@ -14,7 +32,7 @@ export default function Home() {
           <Card className="">
             <div className="flex items-center justify-center pt-4">
               <Avatar className="items-center justify-center align-center w-16 h-16">
-                <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover"/>
+                <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover" />
                 <AvatarFallback>PFP</AvatarFallback>
               </Avatar>
             </div>
@@ -28,19 +46,27 @@ export default function Home() {
           </Card>
         </div>
         <div className="w-[40%] space-y-8">
-          <Card className="">
+          <Card className="" key="createpost">
             <CardHeader>
               <SearchForm message="Create a post" />
             </CardHeader>
           </Card>
-          <Card className="">
-            <CardHeader>Hello</CardHeader>
-          </Card>
-          <Card className="">
-            <CardHeader>Hello</CardHeader>
-          </Card>
-          <Card className="">
-            <CardHeader>Hello</CardHeader>
+          {feed.map((post) => (
+            <Card key={post["id"]} className="">
+              <CardHeader>
+                <Avatar>
+                  <AvatarImage src={`https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_${post.userId}.png`} />
+                  <AvatarFallback>{post["image"]}</AvatarFallback>
+                </Avatar>
+                <CardTitle>hi</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>{post["body"]}</CardDescription>
+              </CardContent>
+            </Card>
+            ))}
+          <Card className="hello1">
+            <CardHeader>Hello, this is a post</CardHeader>
           </Card>
         </div>
         <div className="w-[25%]">
@@ -52,7 +78,7 @@ export default function Home() {
               <div className="grid grid-rows-3 grid-flow-col gap-1">
                 <div className="row-span-3">
                   <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/memojis/png/vibrent_2.png" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </div>
@@ -62,7 +88,7 @@ export default function Home() {
               <div className="grid grid-rows-3 grid-flow-col gap-1">
                 <div className="row-span-3">
                   <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/memojis/png/vibrent_3.png" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </div>
@@ -72,7 +98,7 @@ export default function Home() {
               <div className="grid grid-rows-3 grid-flow-col gap-1">
                 <div className="row-span-3">
                   <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/memojis/png/vibrent_4.png" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </div>
