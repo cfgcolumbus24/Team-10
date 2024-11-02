@@ -3,9 +3,16 @@
 import Image from "next/image";
 import Navbar from "../components/ui/Navbar";
 import SearchForm from "@/components/ui/SearchForm";
+import InputField from "@/components/ui/InputField";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+<<<<<<< Updated upstream
 import { use, useEffect, useState } from "react";
+=======
+import Modal from "@/components/ui/Modal";
+import AddMediaModal from "@/components/ui/AddMediaModal";
+
+>>>>>>> Stashed changes
 
 export default function Home() {
   const [feed, setFeed] = useState([]);
@@ -27,6 +34,8 @@ export default function Home() {
   return (
     <div className="">
       <Navbar />
+
+      {/* left panel - profile info */}
       <div className="w-full flex-auto content-center items-start justify-center flex p-20 space-x-8">
         <div className="w-[25%]">
           <Card className="">
@@ -45,10 +54,22 @@ export default function Home() {
 
           </Card>
         </div>
+
+        {/* middle panel - make a post and post feed below it */}
         <div className="w-[40%] space-y-8">
+<<<<<<< Updated upstream
           <Card className="" key="createpost">
             <CardHeader>
               <SearchForm message="Create a post" />
+=======
+          <Card className="">
+            <CardHeader className= "flex flex-row gap-3">
+            <Avatar className="items-center justify-center align-center w-12 h-12">
+                <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover"/>
+                <AvatarFallback>PFP</AvatarFallback>
+            </Avatar>
+            <Modal></Modal>  
+>>>>>>> Stashed changes
             </CardHeader>
           </Card>
           {feed.map((post) => (
@@ -69,6 +90,8 @@ export default function Home() {
             <CardHeader>Hello, this is a post</CardHeader>
           </Card>
         </div>
+
+        {/* right panel - connect with other  */}
         <div className="w-[25%]">
           <Card className="">
             <CardHeader>
