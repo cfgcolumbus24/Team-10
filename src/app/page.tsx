@@ -66,7 +66,7 @@ export default function Home() {
             </Card>
             ))}
           <Card className="hello1">
-            <CardHeader>Hello</CardHeader>
+            <CardHeader>Hello, this is a post</CardHeader>
           </Card>
         </div>
         <div className="w-[25%]">
