@@ -35,6 +35,7 @@ export async function POST(
             .select({
                 userId: users.id,
                 passwordHash: users.passwordHash,
+                onboarded: users.onboarded,
             })
             .from(users)
             .where(eq(users.email, email));
@@ -52,7 +53,7 @@ export async function POST(
             );
         }
 
-        const { userId, passwordHash } = query[0];
+        const { userId, passwordHash, onboarded } = query[0];
 
         // Verify password
         if (!(await argon2.verify(passwordHash, password))) {
@@ -80,6 +81,7 @@ export async function POST(
                 data: {
                     userId,
                     token,
+                    onboarded,
                 },
             },
             {

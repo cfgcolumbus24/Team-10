@@ -10,24 +10,29 @@ import { sql } from "drizzle-orm";
 
 export const schema = pgSchema("alumnet");
 
+export const userType = schema.enum("userType", ["regular", "admin"]);
+
 export const users = schema.table("users", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     email: text().notNull().unique(),
-    passwordHash: text("password_hash").notNull(), // update when a password reset request is defeated
+    passwordHash: text().notNull(), // update when a password reset request is defeated
     name: text().notNull().unique(),
     bio: text(),
+    pic: integer().references(() => media.id),
     contact: text(),
+    userType: userType().notNull().default("regular"),
+    onboarded: boolean().notNull().default(false),
 });
 
 export const sessions = schema.table("sessions", {
     token: text().notNull().primaryKey(), // generated using CSPRNG
 
-    userId: integer("user_id")
+    userId: integer()
         .notNull()
         .references(() => users.id),
 
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    expiresAt: timestamp("expires_at")
+    createdAt: timestamp().notNull().defaultNow(),
+    expiresAt: timestamp()
         .notNull()
         .default(sql`CURRENT_TIMESTAMP + INTERVAL '1 week'`),
 
@@ -54,6 +59,7 @@ export const postType = schema.enum("postType", [
     "opportunity",
     "post",
     "event",
+    "admin",
 ]);
 
 export const posts = schema.table("posts", {
@@ -62,8 +68,7 @@ export const posts = schema.table("posts", {
         .notNull()
         .references(() => users.id),
     body: text().notNull(),
-    image: integer()
-        .notNull()
-        .references(() => media.id),
+    image: integer().references(() => media.id),
     type: postType().notNull(),
+    timestamp: timestamp().notNull().defaultNow(),
 });

@@ -1,14 +1,15 @@
+import { and, eq } from "drizzle-orm";
+
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
-import { posts } from "@/db/schema";
+import { follows } from "@/db/schema";
 import { withAuth } from "@/lib/auth";
 import { z } from "zod";
 
-const PostSchema = z.object({
-    image: z.number(),
-    body: z.string(),
-    type: z.enum(["post", "opportunity", "event", "admin"]),
+//User To Un-Follow
+const FollowSchema = z.object({
+    userId: z.coerce.number(),
 });
 
 export const POST = withAuth(
@@ -20,56 +21,51 @@ export const POST = withAuth(
                         success: false,
                         message: "Unauthorized",
                     },
-                    { status: 400 }
+                    { status: 401 }
                 );
             }
 
             const body = await request.json();
+            const result = FollowSchema.safeParse(body);
 
-            const result = PostSchema.safeParse(body);
             if (!result.success) {
                 return NextResponse.json(
                     {
                         success: false,
                         error: "Invalid data",
                     },
-                    {
-                        status: 400,
-                    }
+                    { status: 400 }
                 );
             }
 
             const validatedData = result.data;
 
-            const [{ postId }] = await dbClient
-                .insert(posts)
-                .values({
-                    userId: auth.user.id,
-                    body: validatedData.body,
-                    image: validatedData.image,
-                    type: validatedData.type,
-                })
-                .returning({ postId: posts.id });
+            // Delete the follow relationship if it exists
+            const deleted = await dbClient
+                .delete(follows)
+                .where(
+                    and(
+                        eq(follows.followerId, auth.user.id),
+                        eq(follows.followingId, validatedData.userId)
+                    )
+                )
+                .execute();
 
             return NextResponse.json(
                 {
                     success: true,
-                    data: { postId },
+                    message: "Unfollowed the user",
                 },
-                {
-                    status: 201,
-                }
+                { status: 200 }
             );
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return NextResponse.json(
                 {
                     success: false,
                     error: "Failed to process request",
                 },
-                {
-                    status: 500,
-                }
+                { status: 500 }
             );
         }
     }

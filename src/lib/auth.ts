@@ -1,5 +1,3 @@
-// lib/auth.ts
-
 import { NextRequest, NextResponse } from "next/server";
 import { sessions, users } from "@/db/schema";
 
@@ -16,6 +14,7 @@ export interface AuthContext {
     user: {
         id: number;
         email: string;
+        userType: string; // Added userType to the user interface
     };
 }
 
@@ -82,9 +81,13 @@ export function withAuth(
                 );
             }
 
-            // Get user data
+            // Get user data (now including userType)
             const user = await dbClient
-                .select({ id: users.id, email: users.email })
+                .select({
+                    id: users.id,
+                    email: users.email,
+                    userType: users.userType, // Added userType to the selection
+                })
                 .from(users)
                 .where(eq(users.id, userId));
 
@@ -98,7 +101,7 @@ export function withAuth(
                 );
             }
 
-            const { id, email } = user[0];
+            const { id, email, userType } = user[0];
 
             // Check session expiry
             const timestamp = new Date(Date.now());
@@ -148,7 +151,7 @@ export function withAuth(
                         createdAt: revalidatedCreatedAt,
                         expiresAt: revalidatedExpiresAt,
                     },
-                    user: { id, email },
+                    user: { id, email, userType }, // Added userType to the auth context
                 });
 
                 // Set new token cookie
@@ -168,7 +171,7 @@ export function withAuth(
                     createdAt,
                     expiresAt,
                 },
-                user: { id, email },
+                user: { id, email, userType }, // Added userType to the auth context
             });
         } catch (error) {
             console.error("Auth error:", error);
