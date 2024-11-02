@@ -13,6 +13,7 @@ import { use, useEffect, useState } from "react";
 import Footer from "@/components/ui/Footer";
 import Modal from "@/components/ui/Modal";
 import Navbar from "@/components/ui/Navbar";
+import { ChevronRight } from "lucide-react";
 
 export default function Home() {
     useEffect(() => {
@@ -243,8 +244,62 @@ export default function Home() {
                             ))}
                         </CardContent>
                     </Card>
+                    <div className="h-8"></div>
+                    {profile.name && 
+                    // view the job postings and events
+                    <div>
+                      <Card>
+                        <CardContent className="flex flex-col p-4 space-y-2">
+                          {feed.filter((e) => e.type == "opportunity" ).map((event) => (
+                            <a
+                              className="flex flex-col group border-b border-gray-200 pb-2 last:border-b-0"
+                              key={event.type}
+                              href={`/events/${event.id}`}
+                            >
+                              <div className="font-semibold text-lg group-hover:text-gray-700">
+                                Job Posting
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {event.body} | {event.image}
+                              </div>
+                            </a>
+                          ))}
+                          <a href="/" className="text-gray-400 text-sm mt-4 flex items-center">
+                            View more LMCC Job Opportunities
+                            <ChevronRight className="ml-1 w-4 h-4" />
+                          </a>
+                        </CardContent>
+                    </Card>
+
+                    <div className="h-8"></div>
+                    <Card>
+                        <CardContent className="flex flex-col p-4 space-y-2">
+                          {feed.filter((e) => e.type == "event" ).map((event) => (
+                            <a
+                              className="flex flex-col group border-b border-gray-200 pb-2 last:border-b-0"
+                              key={event.type}
+                              href={`/events/${event.id}`}
+                            >
+                              <div className="font-semibold text-lg group-hover:text-gray-700">
+                                LMCC Events
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {event.body} | {event.image}
+                              </div>
+                            </a>
+                          ))}
+                          <a href="/" className="text-gray-400 text-sm mt-4 flex items-center">
+                            View more LMCC Events
+                            <ChevronRight className="ml-1 w-4 h-4" />
+                          </a>
+                        </CardContent>
+                    </Card>
+                    </div>
+                    } 
+                    
                 </div>
             </div>
+            
             <Footer />
         </div>
     );
