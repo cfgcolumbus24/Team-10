@@ -13,8 +13,8 @@ const ParamsSchema = z.object({
 
 export async function GET(
     request: Request,
-    { params }: { params: Record<string, string> }
-): Promise<NextResponse<ApiResponse>> {
+    { params }: { params: { postId: string } }
+): Promise<NextResponse> {
     try {
         // Validate params
         const result = ParamsSchema.safeParse({ postId: await params.postId });
