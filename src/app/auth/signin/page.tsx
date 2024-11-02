@@ -1,7 +1,7 @@
 "use client";
 
 import { Lock, User } from "lucide-react";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 interface FormData {
     email: string;
