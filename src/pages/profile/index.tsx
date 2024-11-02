@@ -25,7 +25,7 @@ export default function index() {
           />
         </div>
 
-        <div className="flex flex-col mt-4">
+        <div className="flex flex-col mt-4 pb-4"> {/* Added pb-4 here */}
           <GalleryCard />
           <PostCard />
         </div>
