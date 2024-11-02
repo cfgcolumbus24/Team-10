@@ -3,7 +3,7 @@ import { media, posts, users } from "@/db/schema"; // Import your schemas
 
 import { ApiResponse } from "@/app/api/common";
 import { dbClient } from "@/db/client"; // Import your database client
-import { eq } from "drizzle-orm";
+import { and,eq,} from "drizzle-orm";
 import { withAuth } from "@/lib/auth";
 
 export const GET = withAuth(async (req, auth) => {
@@ -41,16 +41,16 @@ export const GET = withAuth(async (req, auth) => {
             );
         }
 
-        const userPosts = await dbClient
-            .select()
-            .from(posts)
-            .where(and(eq(posts.userId, profile.id), notEq(posts.type, "post"))); //change made to just show other posts
-            
+        const userPosts = await dbClient.execute(
+            `SELECT * FROM posts WHERE "userId" = $1 AND type != 'post'`,
+            [profileId]
+        );
 
-        const galleryPosts = await dbClient
-            .select()
-            .from(posts)
-            .where(and(eq(posts.userId, profile.id), eq(posts.type, "post")));
+        const galleryPosts = await dbClient.execute(
+            `SELECT * FROM posts WHERE "userId" = $1 AND type = 'post'`,
+            [profileId]
+        );
+
         /*
         const userPosts = await dbClient
             .select()
