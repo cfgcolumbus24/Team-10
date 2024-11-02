@@ -41,16 +41,20 @@ export const POST = withAuth(
 
             const validatedData = result.data;
 
-            await dbClient.insert(posts).values({
-                userId: auth.user.id,
-                body: validatedData.body,
-                image: validatedData.image,
-                type: validatedData.type,
-            });
+            const [{ postId }] = await dbClient
+                .insert(posts)
+                .values({
+                    userId: auth.user.id,
+                    body: validatedData.body,
+                    image: validatedData.image,
+                    type: validatedData.type,
+                })
+                .returning({ postId: posts.id });
 
             return NextResponse.json(
                 {
                     success: true,
+                    data: { postId },
                 },
                 {
                     status: 201,
