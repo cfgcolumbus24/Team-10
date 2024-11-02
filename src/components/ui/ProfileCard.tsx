@@ -1,5 +1,4 @@
 import React from 'react';
-import '../../app/globals.css'; // Adjust the path as necessary
 
 
 interface ProfileCardProps {
