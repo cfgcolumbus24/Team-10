@@ -5,6 +5,7 @@ import ProfileCard from "@/components/ui/ProfileCard";
 import GalleryCard from "@/components/ui/GalleryCard";
 import PostCard from "@/components/ui/PostCard";
 import Navbar from '@/components/ui/Navbar';
+import Footer from '@/components/ui/Footer'
 
 export default function index() {
   return (
@@ -30,6 +31,7 @@ export default function index() {
           <PostCard />
         </div>
       </div>
+      <Footer />
     </>
   );
 }
