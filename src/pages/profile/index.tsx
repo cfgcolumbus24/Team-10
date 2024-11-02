@@ -2,10 +2,12 @@ import React from 'react'
 import '../../app/globals.css' // Adjust the path as necessary
 import ContactCard from "../../components/ui/ContactCard"
 import ProfileCard from "../../components/ui/ProfileCard"
+import GalleryCard from "../../components/ui/GalleryCard"
 export default function index() {
   return (
-    <div className="flex p-4 gap-x-4 mr-32 ml-32">
-      <ProfileCard
+    <div className="flex flex-col mr-32 ml-32">
+      <div className="flex gap-x-4">
+        <ProfileCard
           firstName="John"
           lastName="Doe"
           profession="Painter"
@@ -17,5 +19,11 @@ export default function index() {
           phone="123-456-7890"
         />
       </div>
+      <div className="flex">
+        <GalleryCard
+        />
+      </div>
+
+  </div>
   )
 }
