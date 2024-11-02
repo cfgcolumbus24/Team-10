@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { CardContent, CardDescription } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 
+import { Metadata } from "next";
 import Navbar from "@/components/ui/Navbar";
 import ProfileCard from "@/components/ui/ProfileCard";
 
@@ -47,6 +48,10 @@ interface ApiResponse {
 
 export default function Index() {
     const [profile, setProfile] = useState<ApiResponseData | null>(null);
+
+    useEffect(() => {
+        document.title = `Profile :: AlumNet`;
+    }, []);
 
     useEffect(() => {
         async function fetchProfile() {

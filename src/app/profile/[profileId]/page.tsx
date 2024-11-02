@@ -51,6 +51,10 @@ export default function Index() {
     const [profile, setProfile] = useState<ApiResponseData | null>(null);
 
     useEffect(() => {
+        document.title = `Profile :: AlumNet`;
+    }, []);
+
+    useEffect(() => {
         async function fetchProfile() {
             const response = await fetch(`/api/profile/${params.profileId}`);
             const result: ApiResponse = await response.json();

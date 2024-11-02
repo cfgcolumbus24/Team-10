@@ -1,8 +1,9 @@
 "use client";
 
 import { ChevronRight, Loader2, Upload } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuth, withAuthRedirect } from "@/contexts/AuthContext";
+
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -20,6 +21,10 @@ const OnboardingForm = () => {
     const [error, setError] = useState("");
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [mediaId, setMediaId] = useState<number | null>(null);
+
+    useEffect(() => {
+        document.title = `Welcome :: AlumNet`;
+    }, []);
 
     const {
         register,
@@ -142,13 +147,12 @@ const OnboardingForm = () => {
                 </h1>
 
                 {error && (
-                    <div className="text-red-500 text-sm text-center">{error}</div>
+                    <div className="text-red-500 text-sm text-center">
+                        {error}
+                    </div>
                 )}
 
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="space-y-4"
-                >
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     {/* Full Name Input */}
                     <div className="flex flex-col gap-1">
                         <label

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,10 @@ const fullSchema = z.object({
 type SignupFormData = z.infer<typeof fullSchema>;
 
 const SignupForm = () => {
+    useEffect(() => {
+        document.title = `Sign Up :: AlumNet`;
+    }, []);
+
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
@@ -93,7 +98,9 @@ const SignupForm = () => {
                         </Link>
                     </span>
 
-                    {error && <div className="text-red-600 text-sm">{error}</div>}
+                    {error && (
+                        <div className="text-red-600 text-sm">{error}</div>
+                    )}
 
                     <form
                         onSubmit={handleSubmit(onSubmit)}
@@ -189,15 +196,17 @@ const SignupForm = () => {
 
                         <button
                             type="submit"
-                            disabled={isLoading || Object.keys(errors).length > 0}
+                            disabled={
+                                isLoading || Object.keys(errors).length > 0
+                            }
                             className="p-2.5 font-semibold bg-[#1CBCEE] text-foreground rounded-md hover:bg-[#18A4D4] transition duration-200 group"
                         >
                             <span className="flex flex-row items-center justify-between">
                                 {isLoading
                                     ? "Loading..."
                                     : showPassword
-                                        ? "Sign Up"
-                                        : "Continue"}
+                                    ? "Sign Up"
+                                    : "Continue"}
                                 <ChevronRight className="w-4 h-4 transition-transform duration-300 -translate-x-1 group-hover:translate-x-0" />
                             </span>
                         </button>

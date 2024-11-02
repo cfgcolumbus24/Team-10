@@ -14,6 +14,10 @@ import Modal from "@/components/ui/Modal";
 import Navbar from "../components/ui/Navbar";
 
 export default function Home() {
+    useEffect(() => {
+        document.title = `Feed :: AlumNet`;
+    }, []);
+
     const [feed, setFeed] = useState([]);
     const [profile, setProfile] = useState<{
         name?: string;
