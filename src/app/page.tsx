@@ -123,15 +123,6 @@ export default function Home() {
                                     </CardHeader>
                                 </div>
                             </Link>
-                            <div className="flex justify-center mb-4">
-                                <button
-                                    className="px-4 py-2 border border-transparent bg-[#F3686B] text-white rounded transition-all duration-300 
-               hover:bg-white hover:border-[#F3686B] hover:text-[#F3686B]"
-                                    onClick={handleSignOut}
-                                >
-                                    Sign Out
-                                </button>
-                            </div>
                         </Card>
                     </div>
                 ) : (
