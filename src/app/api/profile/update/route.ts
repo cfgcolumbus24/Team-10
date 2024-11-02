@@ -53,7 +53,14 @@ export const POST = withAuth(async (request, auth) => {
             .update(users)
             .set(updates)
             .where(eq(users.id, userId))
-            .returning() // Return updated user data
+            .returning({
+                id: users.id,
+                email: users.email,
+                name: users.name,
+                bio: users.bio,
+                pic: users.pic,
+                contact: users.contact,
+            }) // Return updated user data
             .execute();
 
         // Check if user was found and updated
