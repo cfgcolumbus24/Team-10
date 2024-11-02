@@ -55,7 +55,7 @@ export async function GET(
         }
 
         const userPosts = await dbClient.execute(
-            `SELECT * FROM posts WHERE "userId" = $1 AND type != 'post'`,
+            `SELECT * FROM posts WHERE "userId" = $1 AND type == 'post'`,
             [profileId]
         );
         const galleryPosts = await dbClient.execute(
