@@ -1,15 +1,15 @@
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import csprng from "csprng";
 import { dbClient } from "@/db/client";
-import { posts } from "@/db/schema";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { media } from "@/db/schema";
+import { s3Client } from "@/aws/s3Client";
 import { withAuth } from "@/lib/auth";
 import { z } from "zod";
 
-const PostSchema = z.object({
-    image: z.number(),
-    body: z.string(),
-    type: z.enum(["post", "opportunity", "event"]),
-});
+const PostSchema = z.object({});
 
 export const POST = withAuth(
     async (request, auth): Promise<NextResponse<ApiResponse>> => {
@@ -41,16 +41,29 @@ export const POST = withAuth(
 
             const validatedData = result.data;
 
-            await dbClient.insert(posts).values({
-                userId: auth.user.id,
-                body: validatedData.body,
-                image: 456,
-                type: validatedData.type,
+            const objectId = csprng(256, 16);
+            const command = new PutObjectCommand({
+                Bucket: "alumni-network-cfg",
+                Key: objectId,
             });
+            const presignedUploadUrl = await getSignedUrl(s3Client, command, {
+                expiresIn: 3600,
+            });
+
+            const [{ mediaId }] = await dbClient
+                .insert(media)
+                .values({
+                    resourceUrl: `https://alumni-network-cfg.s3.us-east-2.amazonaws.com/${objectId}`,
+                })
+                .returning({ mediaId: media.id });
 
             return NextResponse.json(
                 {
                     success: true,
+                    data: {
+                        mediaId,
+                        uploadUrl: presignedUploadUrl,
+                    },
                 },
                 {
                     status: 201,
