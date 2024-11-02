@@ -1,7 +1,14 @@
+"use client"
+
+import { Search } from "lucide-react";
 import Image from "next/image";
 import React from 'react';
+import SearchForm from "./SearchForm";
+import { useRouter } from 'next/compat/router'
 
 export default function Navbar() {
+  const router = useRouter();
+
   return (
     <>
       <nav className="bg-gray-800">
@@ -86,6 +93,7 @@ export default function Navbar() {
                 </div>
               </div>
             </div>
+            <SearchForm />
           </div>
         </div>
         <div className="sm:hidden" id="mobile-menu">
