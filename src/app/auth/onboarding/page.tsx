@@ -3,7 +3,6 @@
 import { ChevronRight, Loader2, Upload } from "lucide-react";
 import React, { useRef, useState } from "react";
 import { useAuth, withAuthRedirect } from "@/contexts/AuthContext";
-
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -19,7 +18,6 @@ const OnboardingForm = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
-    const [uploadProgress, setUploadProgress] = useState(0);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [mediaId, setMediaId] = useState<number | null>(null);
 
@@ -107,140 +105,139 @@ const OnboardingForm = () => {
     };
 
     return (
-        <div className="flex flex-row items-center w-full justify-center pt-20">
-            <div className="h-fit w-1/2 flex flex-col gap-8 items-start justify-center">
-                <h1 className="text-4xl font-bold text-foreground">
-                    Complete your profile
+        <div className="min-h-screen w-full flex items-center justify-center bg-slate-50">
+            <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
+                {/* Profile Image Upload */}
+                <div className="flex flex-col items-center gap-4">
+                    <div
+                        className="relative w-32 h-32 rounded-full overflow-hidden bg-[#1CBCEE] flex items-center justify-center cursor-pointer"
+                        onClick={() => fileInputRef.current?.click()}
+                    >
+                        {previewUrl ? (
+                            <Image
+                                src={previewUrl}
+                                alt="Profile preview"
+                                fill
+                                className="object-cover"
+                            />
+                        ) : (
+                            <Upload className="w-12 h-12 text-white" />
+                        )}
+                    </div>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                    />
+                    <p className="text-sm text-gray-600">
+                        Click to upload profile picture
+                    </p>
+                </div>
+
+                {/* Title */}
+                <h1 className="text-2xl font-bold text-gray-900 text-center">
+                    Complete Your Profile
                 </h1>
 
-                <div className="w-full flex flex-col gap-4">
-                    {error && (
-                        <div className="text-red-600 text-sm">{error}</div>
-                    )}
+                {error && (
+                    <div className="text-red-500 text-sm text-center">{error}</div>
+                )}
 
-                    <form
-                        onSubmit={handleSubmit(onSubmit)}
-                        className="w-full h-fit flex flex-col gap-6"
-                    >
-                        <div className="flex flex-col items-center gap-4">
-                            <div
-                                className="relative w-32 h-32 rounded-full overflow-hidden bg-background cursor-pointer group"
-                                onClick={() => fileInputRef.current?.click()}
-                            >
-                                {previewUrl ? (
-                                    <Image
-                                        src={previewUrl}
-                                        alt="Profile preview"
-                                        fill
-                                        className="object-cover"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center bg-background">
-                                        <Upload className="w-8 h-8 text-foreground" />
-                                    </div>
-                                )}
-                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
-                                    <Upload className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-all" />
-                                </div>
-                            </div>
-                            <input
-                                type="file"
-                                ref={fileInputRef}
-                                className="hidden"
-                                accept="image/*"
-                                onChange={handleFileSelect}
-                            />
-                            <p className="text-sm text-foreground">
-                                Click to upload profile picture
-                            </p>
-                        </div>
-
-                        <div className="flex flex-col gap-1">
-                            <label
-                                htmlFor="name"
-                                className="text-sm font-medium text-foreground"
-                            >
-                                Full Name
-                            </label>
-                            <input
-                                {...register("name", {
-                                    required: "Name is required",
-                                })}
-                                type="text"
-                                id="name"
-                                placeholder="Your full name"
-                                className="p-2 border rounded-md bg-background text-foreground"
-                            />
-                            {errors.name && (
-                                <span className="text-red-600 text-sm">
-                                    {errors.name.message}
-                                </span>
-                            )}
-                        </div>
-
-                        <div className="flex flex-col gap-1">
-                            <label
-                                htmlFor="bio"
-                                className="text-sm font-medium text-foreground"
-                            >
-                                Bio
-                            </label>
-                            <textarea
-                                {...register("bio")}
-                                id="bio"
-                                rows={4}
-                                placeholder="Tell us about yourself"
-                                className="p-2 border rounded-md bg-background text-foreground resize-none"
-                            />
-                            {errors.bio && (
-                                <span className="text-red-600 text-sm">
-                                    {errors.bio.message}
-                                </span>
-                            )}
-                        </div>
-
-                        <div className="flex flex-col gap-1">
-                            <label
-                                htmlFor="contact"
-                                className="text-sm font-medium text-foreground"
-                            >
-                                Contact Information
-                            </label>
-                            <input
-                                {...register("contact")}
-                                type="text"
-                                id="contact"
-                                placeholder="How can people reach you?"
-                                className="p-2 border rounded-md bg-background text-foreground"
-                            />
-                            {errors.contact && (
-                                <span className="text-red-600 text-sm">
-                                    {errors.contact.message}
-                                </span>
-                            )}
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="p-2.5 font-semibold bg-blue-300 text-foreground rounded-md hover:bg-blue-400 disabled:bg-blue-200 group"
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="space-y-4"
+                >
+                    {/* Full Name Input */}
+                    <div className="flex flex-col gap-1">
+                        <label
+                            htmlFor="name"
+                            className="text-sm font-medium text-gray-700"
                         >
-                            <span className="flex flex-row items-center justify-between">
-                                {isLoading ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                        Saving...
-                                    </>
-                                ) : (
-                                    <>
-                                        Complete Profile
-                                        <ChevronRight className="w-4 h-4 transition-transform duration-300 -translate-x-1 group-hover:translate-x-0" />
-                                    </>
-                                )}
+                            Full Name
+                        </label>
+                        <input
+                            {...register("name", {
+                                required: "Name is required",
+                            })}
+                            type="text"
+                            id="name"
+                            placeholder="Your full name"
+                            className="w-full p-4 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#1CBCEE] text-gray-900 placeholder-gray-500"
+                        />
+                        {errors.name && (
+                            <span className="text-red-500 text-sm">
+                                {errors.name.message}
                             </span>
-                        </button>
-                    </form>
-                </div>
+                        )}
+                    </div>
+
+                    {/* Bio Input */}
+                    <div className="flex flex-col gap-1">
+                        <label
+                            htmlFor="bio"
+                            className="text-sm font-medium text-gray-700"
+                        >
+                            Bio
+                        </label>
+                        <textarea
+                            {...register("bio")}
+                            id="bio"
+                            rows={4}
+                            placeholder="Tell us about yourself"
+                            className="w-full p-4 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#1CBCEE] text-gray-900 placeholder-gray-500 resize-none"
+                        />
+                        {errors.bio && (
+                            <span className="text-red-500 text-sm">
+                                {errors.bio.message}
+                            </span>
+                        )}
+                    </div>
+
+                    {/* Contact Information Input */}
+                    <div className="flex flex-col gap-1">
+                        <label
+                            htmlFor="contact"
+                            className="text-sm font-medium text-gray-700"
+                        >
+                            Contact Information
+                        </label>
+                        <input
+                            {...register("contact")}
+                            type="text"
+                            id="contact"
+                            placeholder="How can people reach you?"
+                            className="w-full p-4 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#1CBCEE] text-gray-900 placeholder-gray-500"
+                        />
+                        {errors.contact && (
+                            <span className="text-red-500 text-sm">
+                                {errors.contact.message}
+                            </span>
+                        )}
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full p-4 text-white bg-[#1CBCEE] rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium"
+                    >
+                        <span className="flex items-center justify-center">
+                            {isLoading ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                    Saving...
+                                </>
+                            ) : (
+                                <>
+                                    Complete Profile
+                                    <ChevronRight className="w-4 h-4 transition-transform duration-300 -translate-x-1" />
+                                </>
+                            )}
+                        </span>
+                    </button>
+                </form>
             </div>
         </div>
     );

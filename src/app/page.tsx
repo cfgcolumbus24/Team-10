@@ -143,7 +143,7 @@ export default function Home() {
                             className="group"
                         >
                             <Card>
-                                <CardHeader className="group-hover:text-gray-600">
+                                <CardHeader className="group-hover:text-gray-500">
                                     <div className="flex items-center space-x-4">
                                         <Avatar className="items-center justify-center align-center w-16 h-16">
                                             <AvatarImage
@@ -158,7 +158,15 @@ export default function Home() {
                                         </CardTitle>
                                     </div>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="flex flex-col gap-4">
+                                    {post["resourceUrl"] && (
+                                        <div className="flex flex-row items-center justify-center text-clip">
+                                            <img
+                                                className="rounded-md"
+                                                src={post["resourceUrl"]}
+                                            ></img>
+                                        </div>
+                                    )}
                                     <CardDescription className="text-2xl">
                                         {post["body"]}
                                     </CardDescription>
@@ -192,7 +200,7 @@ export default function Home() {
                                         </Avatar>
                                     </div>
                                     <div className="flex flex-col justify-center">
-                                        <div className="font-bold group-hover:text-gray-600">
+                                        <div className="font-bold group-hover:text-gray-500">
                                             {stuff.name}
                                         </div>
                                         <div className="text-sm">
