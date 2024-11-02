@@ -78,11 +78,12 @@ const SignupForm = () => {
     };
 
     return (
-        <div className="h-fit w-1/2 flex flex-col gap-8 items-start justify-center ml-48 mt-40">
+    <div className="flex items-center justify-center min-h-screen bg-[#1CBCEE]">
+        <div className="h-fit w-1/2 flex flex-col gap-8 items-start justify-center bg-white bg-opacity-90 rounded-lg shadow-lg p-8">
             <h1 className="text-4xl font-bold text-foreground">
                 Create your account
             </h1>
-
+    
             <div className="w-full flex flex-col gap-4">
                 <span className="flex flex-row gap-1 text-lg text-foreground">
                     <p>Have an account?</p>
@@ -93,9 +94,9 @@ const SignupForm = () => {
                         Sign In
                     </Link>
                 </span>
-
+    
                 {error && <div className="text-red-600 text-sm">{error}</div>}
-
+    
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="w-full h-fit flex flex-col gap-4"
@@ -127,7 +128,7 @@ const SignupForm = () => {
                             </span>
                         )}
                     </div>
-
+    
                     {showPassword && (
                         <>
                             <div className="flex flex-col gap-1">
@@ -152,7 +153,7 @@ const SignupForm = () => {
                                     </span>
                                 )}
                             </div>
-
+    
                             <div className="flex flex-col gap-1">
                                 <label
                                     htmlFor="password"
@@ -187,11 +188,11 @@ const SignupForm = () => {
                             </div>
                         </>
                     )}
-
+    
                     <button
                         type="submit"
                         disabled={isLoading || Object.keys(errors).length > 0}
-                        className="p-2.5 font-semibold bg-blue-300 text-foreground rounded-md hover:bg-blue-400 disabled:bg-blue-200 group"
+                        className="p-2.5 font-semibold bg-[#1CBCEE] text-foreground rounded-md hover:[#1CBCEE] group"
                     >
                         <span className="flex flex-row items-center justify-between">
                             {isLoading
@@ -205,6 +206,7 @@ const SignupForm = () => {
                 </form>
             </div>
         </div>
+    </div>    
     );
 };
 
