@@ -221,6 +221,28 @@ const OnboardingForm = () => {
                         )}
                     </div>
 
+                    {/* Referral Email */}
+                    <div className="flex flex-col gap-1">
+                        <label
+                            htmlFor="name"
+                            className="text-sm font-medium text-gray-700"
+                        >
+                            Enter a referral email of an artist who would enjoy LMCC to receive exclusive event invites and opportunities to join our art shows.
+                        </label>
+                        <input
+                            {...register("name")}
+                            type="email"
+                            id="refEmail"
+                            placeholder="Give a referral email"
+                            className="w-full p-4 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#1CBCEE] text-gray-900 placeholder-gray-500"
+                        />
+                        {errors.name && (
+                            <span className="text-red-500 text-sm">
+                                {errors.name.message}
+                            </span>
+                        )}
+                    </div>
+
                     {/* Submit Button */}
                     <button
                         type="submit"
