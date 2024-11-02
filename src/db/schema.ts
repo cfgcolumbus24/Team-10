@@ -21,6 +21,7 @@ export const users = schema.table("users", {
     pic: integer().references(() => media.id),
     contact: text(),
     userType: userType().notNull().default("regular"),
+    onboarded: boolean().notNull().default(false),
 });
 
 export const sessions = schema.table("sessions", {
@@ -71,4 +72,5 @@ export const posts = schema.table("posts", {
         .notNull()
         .references(() => media.id),
     type: postType().notNull(),
+    timestamp: timestamp().notNull().defaultNow(),
 });

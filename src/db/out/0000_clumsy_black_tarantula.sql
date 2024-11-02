@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS "alumnet"."posts" (
 	"userId" integer NOT NULL,
 	"body" text NOT NULL,
 	"image" integer NOT NULL,
-	"type" "alumnet"."postType" NOT NULL
+	"type" "alumnet"."postType" NOT NULL,
+	"timestamp" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "alumnet"."sessions" (
@@ -39,6 +40,7 @@ CREATE TABLE IF NOT EXISTS "alumnet"."users" (
 	"pic" integer,
 	"contact" text,
 	"userType" "alumnet"."userType" DEFAULT 'regular' NOT NULL,
+	"onboarded" boolean DEFAULT false NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email"),
 	CONSTRAINT "users_name_unique" UNIQUE("name")
 );

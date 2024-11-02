@@ -51,7 +51,7 @@ export const POST = withAuth(async (request, auth) => {
         // Update the user profile in the database
         const updatedUser = await dbClient
             .update(users)
-            .set(updates)
+            .set({ ...updates, onboarded: true })
             .where(eq(users.id, userId))
             .returning({
                 id: users.id,
