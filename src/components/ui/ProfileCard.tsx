@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../app/globals.css'; // Adjust the path as necessary
 import { MdPersonAdd } from 'react-icons/md';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface ProfileCardProps {
   firstName: string;
@@ -17,10 +17,10 @@ export default function ProfileCard({
   bio
 }: ProfileCardProps) {
   return (
-    <section className="w-3/4 sm:w-full mx-auto p-4 bg-white rounded-lg shadow-md border border-gray-200 flex flex-col sm:flex-row items-center relative space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
+    <section className="w-full sm:w-3/4 mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-md border border-gray-200 flex flex-col sm:flex-row items-center relative space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
       {/* Profile Picture */}
       <div className="flex-shrink-0">
-        <Avatar className="items-center justify-center w-24 h-24 sm:w-32 sm:h-32">
+        <Avatar className="items-center justify-center w-20 h-20 sm:w-32 sm:h-32">
           <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover"/>
           <AvatarFallback>PFP</AvatarFallback>
         </Avatar>
@@ -39,7 +39,7 @@ export default function ProfileCard({
       </div>
       
       {/* Add Friend Button */}
-      <button className="bg-[#1CBCEE] text-white py-1.5 px-3 rounded-md hover:bg-[#F3686B] flex items-center space-x-1 mt-2 sm:mt-0 self-center sm:self-start">
+      <button className="bg-[#1CBCEE] text-white py-1 px-2 sm:py-1.5 sm:px-3 rounded-md hover:bg-[#F3686B] flex items-center space-x-1 mt-2 sm:mt-0 self-center sm:self-start">
         <MdPersonAdd className="text-lg" />
         <span>Add</span>
       </button>
