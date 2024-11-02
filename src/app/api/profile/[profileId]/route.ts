@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { media, posts, users } from "@/db/schema";
+import { withAuth, withOptionalAuth } from "@/lib/auth";
 
 import { ApiResponse } from "@/app/api/common";
 import { dbClient } from "@/db/client";
 import { ne } from "drizzle-orm";
-import { withAuth } from "@/lib/auth";
 import { z } from "zod";
 
 const ParamsSchema = z.object({
@@ -18,7 +18,7 @@ function extractProfileId(url: string): number | null {
     return match ? parseInt(match[1]) : null;
 }
 
-export const GET = withAuth(async (req: NextRequest, auth) => {
+export const GET = withOptionalAuth(async (req: NextRequest, auth) => {
     try {
         // Extract profileId from URL path instead of search params
         const profileId = extractProfileId(req.nextUrl.pathname);
@@ -74,8 +74,9 @@ export const GET = withAuth(async (req: NextRequest, auth) => {
         const jobsPosts = await dbClient
             .select()
             .from(posts)
-            .where(and(eq(posts.userId, profile.id), eq(posts.type, "opportunity")));
-
+            .where(
+                and(eq(posts.userId, profile.id), eq(posts.type, "opportunity"))
+            );
 
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
