@@ -49,10 +49,12 @@ export async function GET(request: NextRequest) {
                 resourceUrl: media.resourceUrl,
                 type: posts.type,
                 userId: posts.userId,
+                userName: users.name,
                 body: posts.body,
                 timestamp: posts.timestamp,
             })
             .from(posts)
+            .leftJoin(users, eq(posts.userId, users.id))
             .leftJoin(media, eq(posts.image, media.id))
             .where(
                 typeOnlyFeed && validatedQuery.data.typeOnlyFeed
