@@ -1,15 +1,15 @@
+import { and, eq } from "drizzle-orm";
+
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
 import { follows } from "@/db/schema";
 import { withAuth } from "@/lib/auth";
 import { z } from "zod";
-import { doesNotMatch } from "assert";
-import { and, eq } from "../../../../node_modules/drizzle-orm/expressions";
 
-//User To follow
+//User To Un-Follow
 const FollowSchema = z.object({
-    userId: z.string().uuid(), 
+    userId: z.coerce.number(),
 });
 
 export const POST = withAuth(
@@ -27,8 +27,7 @@ export const POST = withAuth(
 
             const body = await request.json();
             const result = FollowSchema.safeParse(body);
-            
-            //User doesn't exist
+
             if (!result.success) {
                 return NextResponse.json(
                     {
@@ -41,35 +40,23 @@ export const POST = withAuth(
 
             const validatedData = result.data;
 
-            // Check if the follow relationship already exists
-            const existingFollow = await dbClient
-                .select()
-                .from(follows)
-                .where(and(eq(auth.user.id, follows.followerID), eq(follows.followingID, validatedData.userID)))
+            // Delete the follow relationship if it exists
+            const deleted = await dbClient
+                .delete(follows)
+                .where(
+                    and(
+                        eq(follows.followerId, auth.user.id),
+                        eq(follows.followingId, validatedData.userId)
+                    )
+                )
                 .execute();
-
-            if (existingFollow.length > 0) {
-                return NextResponse.json(
-                    {
-                        success: false,
-                        message: "Already following this user",
-                    },
-                    { status: 409 }
-                );
-            }
-
-            // Insert the new follow relationship
-            await dbClient.insert(follows).values({
-                followerId: auth.user.id,
-                followingId: validatedData.userId,
-            });
 
             return NextResponse.json(
                 {
                     success: true,
-                    message: "Followed the user",
+                    message: "Unfollowed the user",
                 },
-                { status: 201 }
+                { status: 200 }
             );
         } catch (error) {
             console.error(error);

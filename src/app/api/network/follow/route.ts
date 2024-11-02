@@ -1,17 +1,18 @@
+import { and, eq } from "drizzle-orm";
+
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
 import { follows } from "@/db/schema";
 import { withAuth } from "@/lib/auth";
 import { z } from "zod";
-import { doesNotMatch } from "assert";
 
-//User To Un-Follow
+//User To follow
 const FollowSchema = z.object({
-    userId: z.string().uuid(), 
+    userId: z.coerce.number(),
 });
 
-export const disconnect = withAuth(
+export const POST = withAuth(
     async (request, auth): Promise<NextResponse<ApiResponse>> => {
         try {
             if (!auth || !auth.user.id) {
@@ -27,6 +28,7 @@ export const disconnect = withAuth(
             const body = await request.json();
             const result = FollowSchema.safeParse(body);
 
+            //User doesn't exist
             if (!result.success) {
                 return NextResponse.json(
                     {
@@ -39,29 +41,40 @@ export const disconnect = withAuth(
 
             const validatedData = result.data;
 
-            // Delete the follow relationship if it exists
-            const deleted = await dbClient
-                .delete()
+            // Check if the follow relationship already exists
+            const existingFollow = await dbClient
+                .select()
                 .from(follows)
-                .where(and(eq(auth.user.id, follows.followerID), eq(follows.followingID, validatedData.userID)))
+                .where(
+                    and(
+                        eq(follows.followerId, auth.user.id),
+                        eq(follows.followingId, validatedData.userId)
+                    )
+                )
                 .execute();
 
-            if (deleted.rows === 0) {
+            if (existingFollow.length > 0) {
                 return NextResponse.json(
                     {
                         success: false,
-                        message: "No follow relationship found",
+                        message: "Already following this user",
                     },
-                    { status: 404 }
+                    { status: 409 }
                 );
             }
+
+            // Insert the new follow relationship
+            await dbClient.insert(follows).values({
+                followerId: auth.user.id,
+                followingId: validatedData.userId,
+            });
 
             return NextResponse.json(
                 {
                     success: true,
-                    message: "Unfollowed the user",
+                    message: "Followed the user",
                 },
-                { status: 200 }
+                { status: 201 }
             );
         } catch (error) {
             console.error(error);
@@ -75,7 +88,3 @@ export const disconnect = withAuth(
         }
     }
 );
-
-
-
-

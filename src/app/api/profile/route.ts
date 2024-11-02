@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { media, posts, users } from "@/db/schema"; // Import your schemas
+
 import { ApiResponse } from "@/app/api/common";
 import { dbClient } from "@/db/client"; // Import your database client
-import { users, posts, media } from "@/db/schema"; // Import your schemas
 import { z } from "zod";
 import { eq } from "../../../../node_modules/drizzle-orm/index";
 
@@ -11,21 +12,27 @@ const UserProfileSchema= z.object({
     bio: z.string().optional(),
     image: z.string().url().notNull().optional(),
     contact: z.string().nullable().optional(),
-    posts: z.array(z.object({
-        id: z.number(),
-        body: z.string(),
-        type: z.enum(["post", "opportunity", "event"]),
-        // Add other relevant fields from your posts schema as needed
-    })),
-    gallery: z.array(z.object({
-        id: z.number(),
-        resourceUrl: z.string().url(),
-        // Add other relevant fields from your media schema as needed
-    })),
+    posts: z.array(
+        z.object({
+            id: z.number(),
+            body: z.string(),
+            type: z.enum(["post", "opportunity", "event"]),
+            // Add other relevant fields from your posts schema as needed
+        })
+    ),
+    gallery: z.array(
+        z.object({
+            id: z.number(),
+            resourceUrl: z.string().url(),
+            // Add other relevant fields from your media schema as needed
+        })
+    ),
 });
 
 // GET /profile
-export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse>> {
+export async function GET(
+    request: NextRequest
+): Promise<NextResponse<ApiResponse>> {
     try {
         // Replace with the user ID from the authenticated session or query parameters
         const userId = request.nextUrl.searchParams.get("userId") || "1"; // Assuming "1" is the default for testing
@@ -70,13 +77,13 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
             bio: userProfile.bio,
             image: userProfile.image ? userProfile.image : null,
             contact: userProfile.contact,
-            posts: userPosts.map(post => ({
+            posts: userPosts.map((post) => ({
                 id: post.id,
                 body: post.body,
                 type: post.type,
                 // Add other fields from the post as needed
             })),
-            gallery: userGallery.map(mediaItem => ({
+            gallery: userGallery.map((mediaItem) => ({
                 id: mediaItem.id,
                 resourceUrl: mediaItem.resourceUrl,
                 // Add other fields from the media as needed
