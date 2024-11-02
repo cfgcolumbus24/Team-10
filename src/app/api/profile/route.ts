@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { and, ne } from "drizzle-orm";
 import { media, posts, users } from "@/db/schema"; // Import your schemas
 
 import { ApiResponse } from "@/app/api/common";
@@ -27,8 +28,10 @@ export const GET = withAuth(async (req, auth) => {
                 bio: users.bio,
                 contact: users.contact,
                 pic: users.pic,
+                picUrl: media.resourceUrl,
             })
             .from(users)
+            .leftJoin(media, eq(media.id, users.pic))
             .where(eq(users.id, profileId));
 
         if (!profile) {

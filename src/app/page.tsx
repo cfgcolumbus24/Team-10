@@ -10,12 +10,8 @@ import {
 } from "@/components/ui/card";
 import { use, useEffect, useState } from "react";
 
-import AddMediaModal from "@/components/ui/AddMediaModal";
-import Image from "next/image";
-import InputField from "@/components/ui/InputField";
 import Modal from "@/components/ui/Modal";
 import Navbar from "../components/ui/Navbar";
-import SearchForm from "@/components/ui/SearchForm";
 
 export default function Home() {
     const [feed, setFeed] = useState([]);
@@ -23,9 +19,10 @@ export default function Home() {
         name?: string;
         bio?: string;
         contact?: string;
+        picUrl?: string;
     }>({});
     const [explore, setExplore] = useState<
-        { id: string; name: string; bio: string; pic: string }[]
+        { id: string; name: string; bio: string; pic: string; picUrl: string }[]
     >([]);
 
     useEffect(() => {
@@ -76,7 +73,7 @@ export default function Home() {
                             <div className="flex items-center justify-center pt-4 pb-0">
                                 <Avatar className="items-center justify-center align-center w-32 h-32">
                                     <AvatarImage
-                                        src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png"
+                                        src={profile.picUrl}
                                         className="rounded-full object-cover"
                                     />
                                     <AvatarFallback>PFP</AvatarFallback>
@@ -124,7 +121,7 @@ export default function Home() {
                 )}
 
                 {/* middle panel - make a post and post feed below it */}
-                <div className="w-[40%] space-y-8">
+                <div className="w-[40%] space-y-8 flex flex-col gap-1">
                     {profile && profile.name ? (
                         <Card className="">
                             <CardHeader className="flex flex-row gap-3">
@@ -140,28 +137,34 @@ export default function Home() {
                         </Card>
                     ) : null}
                     {feed.map((post) => (
-                        <Card key={post["id"]} className="">
-                            <CardHeader>
-                                <div className="flex items-center space-x-4">
-                                    <Avatar className="items-center justify-center align-center w-16 h-16">
-                                        <AvatarImage
-                                            src={`https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_${post["userId"]}.png`}
-                                        />
-                                        <AvatarFallback>
-                                            {post["image"]}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <CardTitle className="text-2xl">
-                                        {post["userName"]}
-                                    </CardTitle>
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <CardDescription className="text-2xl">
-                                    {post["body"]}
-                                </CardDescription>
-                            </CardContent>
-                        </Card>
+                        <a
+                            href={`/profile/${post["userId"]}`}
+                            key={post["id"]}
+                            className="group"
+                        >
+                            <Card>
+                                <CardHeader className="group-hover:text-gray-600">
+                                    <div className="flex items-center space-x-4">
+                                        <Avatar className="items-center justify-center align-center w-16 h-16">
+                                            <AvatarImage
+                                                src={post["userPicResourceUrl"]}
+                                            />
+                                            <AvatarFallback>
+                                                {post["image"]}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <CardTitle className="text-2xl">
+                                            {post["userName"]}
+                                        </CardTitle>
+                                    </div>
+                                </CardHeader>
+                                <CardContent>
+                                    <CardDescription className="text-2xl">
+                                        {post["body"]}
+                                    </CardDescription>
+                                </CardContent>
+                            </Card>
+                        </a>
                     ))}
                 </div>
 
@@ -175,25 +178,28 @@ export default function Home() {
                                     : "Explore"}
                             </CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="flex flex-col">
                             {explore.map((stuff) => (
-                                <div
-                                    className="grid grid-rows-3 grid-flow-col gap-1"
+                                <a
+                                    className="flex gap-4 group p-2" // Changed to flex layout with gap
                                     key={stuff.id}
+                                    href={`/profile/${stuff.id}`}
                                 >
-                                    <div className="row-span-3">
-                                        <Avatar className="items-center justify-center align-center w-16 h-16">
-                                            <AvatarImage src={`${stuff.pic}`} />
+                                    <div>
+                                        <Avatar className="w-16 h-16">
+                                            <AvatarImage src={stuff.picUrl} />
                                             <AvatarFallback>CN</AvatarFallback>
                                         </Avatar>
                                     </div>
-                                    <div className="col-span-2 font-bold">
-                                        {stuff.name}
+                                    <div className="flex flex-col justify-center">
+                                        <div className="font-bold group-hover:text-gray-600">
+                                            {stuff.name}
+                                        </div>
+                                        <div className="text-sm">
+                                            {stuff.bio}
+                                        </div>
                                     </div>
-                                    <div className="row-span-2 col-span-2 text-sm">
-                                        {stuff.bio}
-                                    </div>
-                                </div>
+                                </a>
                             ))}
                         </CardContent>
                     </Card>
