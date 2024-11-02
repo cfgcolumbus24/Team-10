@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, inArray, not, sql } from "drizzle-orm";
+import { and, eq, inArray, not, sql } from "drizzle-orm";
 import { follows, sessions, users } from "@/db/schema";
 
 import { AuthContext } from "@/lib/auth";
@@ -70,7 +70,12 @@ async function getRandomUsers(dbClient: any, auth: AuthContext | null) {
                 sql`alumnet.media AS user_media`,
                 sql`${users.pic} = user_media.id`
             )
-            .where(not(inArray(users.id, excludeIds)))
+            .where(
+                and(
+                    not(inArray(users.id, excludeIds)),
+                    eq(users.onboarded, true)
+                )
+            )
             .orderBy(sql`RANDOM()`)
             .limit(5);
     } else {
@@ -87,6 +92,7 @@ async function getRandomUsers(dbClient: any, auth: AuthContext | null) {
                 sql`alumnet.media AS user_media`,
                 sql`${users.pic} = user_media.id`
             )
+            .where(eq(users.onboarded, true))
             .orderBy(sql`RANDOM()`)
             .limit(5);
     }
