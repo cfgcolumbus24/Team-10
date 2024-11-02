@@ -15,6 +15,7 @@ import Footer from "@/components/ui/Footer";
 import Link from "next/link";
 import Modal from "@/components/ui/Modal";
 import Navbar from "@/components/ui/Navbar";
+import ReferModal from "@/components/ui/ReferModal";
 
 export default function Home() {
     useEffect(() => {
@@ -100,7 +101,7 @@ export default function Home() {
             {/* left panel - profile info */}
             <div className="w-full flex-auto content-center items-start justify-center flex p-20 space-x-8 ">
                 {profile && profile.name ? (
-                    <div className="w-[25%]">
+                    <div className="w-[25%] space-y-8 flex flex-col gap-1">
                         <Card className="gap-0 group">
                             <Link href="/profile">
                                 <div className="flex items-center justify-center pt-4 pb-0">
@@ -124,6 +125,13 @@ export default function Home() {
                                 </div>
                             </Link>
                         </Card>
+                        {profile && profile.name ? (
+                        <Card className="">
+                            <CardHeader className="flex flex-row gap-3">
+                                <ReferModal></ReferModal>
+                            </CardHeader>
+                        </Card>
+                    ) : null}
                     </div>
                 ) : (
                     <div className="w-[25%]">
