@@ -48,8 +48,13 @@ export const GET = withAuth(async (req, auth) => {
             .where(and(eq(posts.userId, profile.id), ne(posts.type, "post")));
 
         const galleryPosts = await dbClient
-            .select()
+            .select({
+                id: posts.id,
+                resourceUrl: media.resourceUrl,
+                body: posts.body,
+            })
             .from(posts)
+            .leftJoin(media, eq(media.id, posts.image))
             .where(and(eq(posts.userId, profile.id), eq(posts.type, "post")));
 
         const userMedia = await dbClient
