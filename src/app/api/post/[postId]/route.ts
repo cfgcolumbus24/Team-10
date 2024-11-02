@@ -13,7 +13,7 @@ const ParamsSchema = z.object({
 
 export async function GET(
     request: Request,
-    { params }: { params: { postId: string } }
+    { params }: { params: Record<string, string> }
 ): Promise<NextResponse> {
     try {
         // Validate params
