@@ -1,37 +1,37 @@
+import { NextRequest, NextResponse } from "next/server";
+import { and, eq } from "drizzle-orm";
 import { media, posts, users } from "@/db/schema";
 
 import { ApiResponse } from "@/app/api/common";
-import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
-import { eq, and, notEq } from "drizzle-orm/sql/index";
+import { ne } from "drizzle-orm";
+import { withAuth } from "@/lib/auth";
 import { z } from "zod";
 
 const ParamsSchema = z.object({
     profileId: z.coerce.number(),
 });
 
-export async function GET(
-    request: Request,
-    { params }: { params: Record<string, string> }
-): Promise<NextResponse<ApiResponse>> {
-    try {
-        const paramValues = await params;
-        const result = ParamsSchema.safeParse({
-            profileId: paramValues.profileId,
-        });
+// Add this helper function to parse URL parameters
+function extractProfileId(url: string): number | null {
+    const match = url.match(/\/api\/profile\/(\d+)/);
+    return match ? parseInt(match[1]) : null;
+}
 
-        if (!result.success) {
+export const GET = withAuth(async (req: NextRequest, auth) => {
+    try {
+        // Extract profileId from URL path instead of search params
+        const profileId = extractProfileId(req.nextUrl.pathname);
+
+        if (!profileId) {
             return NextResponse.json(
                 {
                     success: false,
-                    error: "Invalid parameters",
-                    details: result.error.issues,
+                    error: "Invalid profile ID",
                 },
                 { status: 400 }
             );
         }
-
-        const { profileId } = result.data;
 
         const [profile] = await dbClient
             .select({
@@ -40,8 +40,10 @@ export async function GET(
                 bio: users.bio,
                 contact: users.contact,
                 pic: users.pic,
+                picUrl: media.resourceUrl,
             })
             .from(users)
+            .leftJoin(media, eq(media.id, users.pic))
             .where(eq(users.id, profileId));
 
         if (!profile) {
@@ -54,30 +56,16 @@ export async function GET(
             );
         }
 
-        /*
-        const userPosts = await dbClient.execute(
-            `SELECT * FROM posts WHERE "userId" = $1 AND type != 'post'`,
-            [profileId]
-        );
-        const galleryPosts = await dbClient.execute(
-            `SELECT * FROM posts WHERE "userId" = $1 AND type == 'post'`,
-            [profileId]
-        );
-        */
-
-        
         const userPosts = await dbClient
             .select()
             .from(posts)
-            .where(and(eq(posts.userId, profile.id), notEq(posts.type, "post"))); //change made to just show other posts
-            
+            .where(and(eq(posts.userId, profile.id), ne(posts.type, "post")));
 
         const galleryPosts = await dbClient
             .select()
             .from(posts)
             .where(and(eq(posts.userId, profile.id), eq(posts.type, "post")));
-            //.execute();
-        
+
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
             .from(posts)
@@ -89,19 +77,21 @@ export async function GET(
             data: {
                 message: "Hello world!",
                 profile,
-                galleryPosts,
                 userPosts,
+                galleryPosts, // Added this to match your API response type
                 userMedia,
             },
         });
     } catch (error) {
-        console.error("Error fetching post:", error);
+        console.error(error);
         return NextResponse.json(
             {
                 success: false,
-                error: "Failed to get data",
+                error: "Failed to get profile data",
             },
-            { status: 500 }
+            {
+                status: 500,
+            }
         );
     }
-}
+});

@@ -14,6 +14,10 @@ import Modal from "@/components/ui/Modal";
 import Navbar from "../components/ui/Navbar";
 
 export default function Home() {
+    useEffect(() => {
+        document.title = `Feed :: AlumNet`;
+    }, []);
+
     const [feed, setFeed] = useState([]);
     const [profile, setProfile] = useState<{
         name?: string;
@@ -24,6 +28,30 @@ export default function Home() {
     const [explore, setExplore] = useState<
         { id: string; name: string; bio: string; pic: string; picUrl: string }[]
     >([]);
+
+    const handleSignOut = async () => {
+        try {
+            const response = await fetch('/api/auth/signout', { // Adjust the path based on your API structure
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+            console.log(data)
+    
+            if (data.success) {
+                // Redirect to sign-in page if sign-out is successful
+                window.location.href = '/';
+            } else {
+                // Handle sign-out error (you might want to display this to the user)
+                console.error('Sign out error:', data.error);
+            }
+        } catch (error) {
+            console.error('Error during sign out:', error);
+        }
+    };
 
     useEffect(() => {
         async function fetchPosts() {
@@ -66,31 +94,42 @@ export default function Home() {
             <Navbar />
 
             {/* left panel - profile info */}
-            <div className="w-full flex-auto content-center items-start justify-center flex p-20 space-x-8">
+            <div className="w-full flex-auto content-center items-start justify-center flex p-20 space-x-8 ">
                 {profile && profile.name ? (
                     <div className="w-[25%]">
-                        <Card className="gap-0">
-                            <div className="flex items-center justify-center pt-4 pb-0">
-                                <Avatar className="items-center justify-center align-center w-32 h-32">
-                                    <AvatarImage
-                                        src={profile.picUrl}
-                                        className="rounded-full object-cover"
-                                    />
-                                    <AvatarFallback>PFP</AvatarFallback>
-                                </Avatar>
-                            </div>
-                            <div className="text-center align-center gap-0">
-                                <CardHeader>
-                                    <CardTitle className="text-4xl">
-                                        {profile.name}
-                                    </CardTitle>
-                                    <CardDescription className="text-xl">
-                                        {profile.bio}
-                                    </CardDescription>
-                                    <CardDescription className="text-2xl">
-                                        {profile.contact}
-                                    </CardDescription>
-                                </CardHeader>
+                        <Card className="gap-0 group">
+                            <a href="/profile">
+                                <div className="flex items-center justify-center pt-4 pb-0">
+                                    <Avatar className="items-center justify-center align-center w-32 h-32 object-cover clip-content">
+                                        <AvatarImage
+                                            src={profile.picUrl}
+                                            className="rounded-full object-cover"
+                                        />
+                                        <AvatarFallback>PFP</AvatarFallback>
+                                    </Avatar>
+                                </div>
+                                <div className="text-center align-center gap-0">
+                                    <CardHeader>
+                                        <CardTitle className="text-4xl group-hover:text-gray-600">
+                                            {profile.name}
+                                        </CardTitle>
+                                        <CardDescription className="text-xl">
+                                            {profile.bio}
+                                        </CardDescription>
+                                        <CardDescription className="text-2xl">
+                                            {profile.contact}
+                                        </CardDescription>
+                                    </CardHeader>
+                                </div>
+                            </a>
+                            <div className="flex justify-center mb-4">
+                                <button
+                                    className="px-4 py-2 border border-transparent bg-[#F3686B] text-white rounded transition-all duration-300 
+               hover:bg-white hover:border-[#F3686B] hover:text-[#F3686B]"
+                                    onClick={handleSignOut}
+                                >
+                                        Sign Out
+                                </button>
                             </div>
                         </Card>
                     </div>
@@ -125,46 +164,48 @@ export default function Home() {
                     {profile && profile.name ? (
                         <Card className="">
                             <CardHeader className="flex flex-row gap-3">
-                                <Avatar className="items-center justify-center align-center w-16 h-16">
-                                    <AvatarImage
-                                        src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png"
-                                        className="rounded-full object-cover"
-                                    />
-                                    <AvatarFallback>PFP</AvatarFallback>
-                                </Avatar>
                                 <Modal></Modal>
                             </CardHeader>
                         </Card>
                     ) : null}
                     {feed.map((post) => (
-                        <a
-                            href={`/profile/${post["userId"]}`}
-                            key={post["id"]}
-                            className="group"
-                        >
-                            <Card>
-                                <CardHeader className="group-hover:text-gray-600">
-                                    <div className="flex items-center space-x-4">
-                                        <Avatar className="items-center justify-center align-center w-16 h-16">
-                                            <AvatarImage
-                                                src={post["userPicResourceUrl"]}
-                                            />
-                                            <AvatarFallback>
-                                                {post["image"]}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <CardTitle className="text-2xl">
-                                            {post["userName"]}
-                                        </CardTitle>
+                        <Card key={post["id"]}>
+                            <CardHeader className="group-hover:text-gray-500">
+                                <div
+                                    className="flex items-center space-x-4 cursor-pointer hover:bg-gray-100 p-2 rounded"
+                                    onClick={() =>
+                                        (window.location.href =
+                                            "/profile/" + post["userId"])
+                                    }
+                                >
+                                    <Avatar className="items-center justify-center align-center w-16 h-16 object-cover clip-content">
+                                        <AvatarImage
+                                            className="w-full h-full object-cover clip-content"
+                                            src={post["userPicResourceUrl"]}
+                                        />
+                                        <AvatarFallback>
+                                            {post["image"]}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <CardTitle className="text-2xl">
+                                        {post["userName"]}
+                                    </CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="flex flex-col gap-4">
+                                {post["resourceUrl"] && (
+                                    <div className="flex flex-row items-center justify-center text-clip object-cover clip-content">
+                                        <img
+                                            className="rounded-md"
+                                            src={post["resourceUrl"]}
+                                        ></img>
                                     </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <CardDescription className="text-2xl">
-                                        {post["body"]}
-                                    </CardDescription>
-                                </CardContent>
-                            </Card>
-                        </a>
+                                )}
+                                <CardDescription className="text-2xl">
+                                    {post["body"]}
+                                </CardDescription>
+                            </CardContent>
+                        </Card>
                     ))}
                 </div>
 
@@ -186,13 +227,13 @@ export default function Home() {
                                     href={`/profile/${stuff.id}`}
                                 >
                                     <div>
-                                        <Avatar className="w-16 h-16">
+                                        <Avatar className="items-center justify-center align-center w-16 h-16 object-cover clip-content">
                                             <AvatarImage src={stuff.picUrl} />
                                             <AvatarFallback>CN</AvatarFallback>
                                         </Avatar>
                                     </div>
                                     <div className="flex flex-col justify-center">
-                                        <div className="font-bold group-hover:text-gray-600">
+                                        <div className="font-bold group-hover:text-gray-500">
                                             {stuff.name}
                                         </div>
                                         <div className="text-sm">

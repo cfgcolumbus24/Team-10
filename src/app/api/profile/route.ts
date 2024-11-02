@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, ne } from "drizzle-orm";
-import { media, posts, users } from "@/db/schema"; // Import your schemas
+import { and, eq, ne } from "drizzle-orm";
+import { media, posts, users } from "@/db/schema";
 
-import { ApiResponse } from "@/app/api/common";
-import { dbClient } from "@/db/client"; // Import your database client
-import { eq } from "drizzle-orm";
+import { dbClient } from "@/db/client";
 import { withAuth } from "@/lib/auth";
 
 export const GET = withAuth(async (req, auth) => {
@@ -47,18 +45,18 @@ export const GET = withAuth(async (req, auth) => {
         const userPosts = await dbClient
             .select()
             .from(posts)
-            .where(and(eq(posts.userId, profile.id), ne(posts.type, "post"))); //change made to just show other posts
+            .where(and(eq(posts.userId, profile.id), ne(posts.type, "post")));
 
         const galleryPosts = await dbClient
-            .select()
+            .select({
+                id: posts.id,
+                resourceUrl: media.resourceUrl,
+                body: posts.body,
+            })
             .from(posts)
+            .leftJoin(media, eq(media.id, posts.image))
             .where(and(eq(posts.userId, profile.id), eq(posts.type, "post")));
-        /*
-        const userPosts = await dbClient
-            .select()
-            .from(posts)
-            .where(eq(posts.userId, profile.id));
-        */
+
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
             .from(posts)
@@ -71,6 +69,7 @@ export const GET = withAuth(async (req, auth) => {
                 message: "Hello world!",
                 profile,
                 userPosts,
+                galleryPosts,
                 userMedia,
             },
         });
