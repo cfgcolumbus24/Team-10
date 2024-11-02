@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Navbar from "../components/ui/Navbar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import SearchForm from "@/components/ui/SearchForm";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 
@@ -9,14 +10,28 @@ export default function Home() {
     <div className="">
       <Navbar />
       <div className="w-full flex-auto content-center items-start justify-center flex p-20 space-x-8">
-        <div className="w-[15%]">
+        <div className="w-[25%]">
           <Card className="">
-            <CardHeader>Hello</CardHeader>
+            <div className="flex items-center justify-center pt-4">
+              <Avatar className="items-center justify-center align-center w-16 h-16">
+                <AvatarImage src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png" className="rounded-full object-cover"/>
+                <AvatarFallback>PFP</AvatarFallback>
+              </Avatar>
+            </div>
+            <div className="text-center align-center gap-0">
+              <CardHeader>
+                <CardTitle className="text-lg">Mia Thompson</CardTitle>
+                <CardDescription> Mia Thompson is a passionate visual artist and illustrator based in Manhattan, New York. </CardDescription>
+              </CardHeader>
+            </div>
+
           </Card>
         </div>
         <div className="w-[40%] space-y-8">
           <Card className="">
-            <CardHeader>Hello</CardHeader>
+            <CardHeader>
+              <SearchForm message="Create a post" />
+            </CardHeader>
           </Card>
           <Card className="">
             <CardHeader>Hello</CardHeader>
@@ -28,7 +43,7 @@ export default function Home() {
             <CardHeader>Hello</CardHeader>
           </Card>
         </div>
-        <div className="w-[18%]">
+        <div className="w-[25%]">
           <Card className="">
             <CardHeader>
               <CardTitle className="text-lg">Connect with others</CardTitle>

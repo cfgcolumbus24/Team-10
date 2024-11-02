@@ -87,7 +87,7 @@ export default function Navbar() {
                 </div>
               </div>
             </div>
-            <SearchForm />
+            <SearchForm message="Searching for Events, Artists, and Jobs"/>
           </div>
         </div>
         <div className="sm:hidden" id="mobile-menu">

@@ -1,8 +1,13 @@
-"use client"
+"use client";
 
 import React, { useState } from 'react';
 
-const SearchForm: React.FC = () => {
+
+interface SearchFormProps {
+    message: string; 
+}
+
+const SearchForm: React.FC<SearchFormProps> = ({ message }) => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -11,7 +16,6 @@ const SearchForm: React.FC = () => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // Handle the search functionality here, e.g., making an API call
         console.log("Searching for:", searchTerm);
     };
 
@@ -42,7 +46,7 @@ const SearchForm: React.FC = () => {
                     type="search"
                     id="default-search"
                     className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Search Artists, Events..."
+                    placeholder={message} 
                     required
                     value={searchTerm}
                     onChange={handleSearchChange}
