@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { alias, pgTable } from "drizzle-orm/pg-core";
-import { and, desc, eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { media, posts, users } from "@/db/schema";
 
 import { dbClient } from "@/db/client";
-import { withAuth } from "@/lib/auth";
 import { z } from "zod";
 
 // Define the schema for filtering posts by type

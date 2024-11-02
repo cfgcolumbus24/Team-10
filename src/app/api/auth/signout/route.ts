@@ -1,10 +1,9 @@
-import { ApiResponse, statusMessageFromZodError } from "@/app/api/common";
-import { ZodError, z } from "zod";
-
 import { NextResponse } from "next/server";
+import { ZodError } from "zod";
 import { dbClient } from "@/db/client";
 import { eq } from "drizzle-orm";
 import { sessions } from "@/db/schema";
+import { statusMessageFromZodError } from "@/app/api/common";
 import { withAuth } from "@/lib/auth";
 
 /**

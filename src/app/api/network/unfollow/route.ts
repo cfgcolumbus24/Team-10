@@ -41,7 +41,7 @@ export const POST = withAuth(
             const validatedData = result.data;
 
             // Delete the follow relationship if it exists
-            const deleted = await dbClient
+            await dbClient
                 .delete(follows)
                 .where(
                     and(
