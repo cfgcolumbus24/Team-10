@@ -122,11 +122,11 @@ export default function Home() {
                       Your profile
                     </p>
                   </CardHeader>
-                  <div className="flex justify-center w-full pb-4">
-                    <ReferModal></ReferModal>
-                  </div>
                 </div>
               </Link>
+              <div className="flex justify-center w-full pb-4">
+                <ReferModal></ReferModal>
+              </div>
             </Card>
           </div>
         ) : (
@@ -140,24 +140,54 @@ export default function Home() {
                   <CardDescription className="text-xl">
                     Please sign in to view your profile
                   </CardDescription>
-                    <div className="flex justify-center">
-                      <button
+                  <div className="flex justify-center">
+                    <button
                       className="mt-4 px-4 py-2 bg-[#1CBCEE] text-white text-2xl rounded w-1/2 flex items-center justify-center"
                       onClick={() =>
                         (window.location.href = "/auth/signin")
                       }
-                      >
+                    >
                       Sign In
-                      </button>
-                    </div>
+                    </button>
+                  </div>
                 </CardHeader>
               </div>
             </Card>
           </div>
-        )}
+        )
+        }
 
         {/* middle panel - make a post and post feed below it */}
         <div className="w-[40%] space-y-8 flex flex-col gap-1">
+          {!feed.length && (
+            <div className="space-y-8">
+              <Card className="animate-pulse">
+                <CardHeader className="flex flex-row gap-3">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-16 h-16 bg-gray-300 rounded-full"></div>
+                    <div className="h-8 bg-gray-300 rounded w-32"></div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="h-48 bg-gray-300 rounded"></div>
+                  <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                </CardContent>
+              </Card>
+              <Card className="animate-pulse">
+                <CardHeader className="flex flex-row gap-3">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-16 h-16 bg-gray-300 rounded-full"></div>
+                    <div className="h-8 bg-gray-300 rounded w-32"></div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
           {profile && profile.name ? (
             <Card className="">
               <CardHeader className="flex flex-row gap-3">
@@ -235,6 +265,31 @@ export default function Home() {
                     </div>
                     <div className="text-sm">
                       {stuff.bio}
+                      {!explore.length && (
+                        <div className="animate-pulse">
+                          <div className="flex gap-4 p-2">
+                            <div className="w-16 h-16 bg-gray-300 rounded-full"></div>
+                            <div className="flex flex-col justify-center space-y-2">
+                              <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+                              <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                            </div>
+                          </div>
+                          <div className="flex gap-4 p-2">
+                            <div className="w-16 h-16 bg-gray-300 rounded-full"></div>
+                            <div className="flex flex-col justify-center space-y-2">
+                              <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+                              <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                            </div>
+                          </div>
+                          <div className="flex gap-4 p-2">
+                            <div className="w-16 h-16 bg-gray-300 rounded-full"></div>
+                            <div className="flex flex-col justify-center space-y-2">
+                              <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+                              <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </a>
@@ -242,6 +297,22 @@ export default function Home() {
             </CardContent>
           </Card>
           <div className="h-8"></div>
+          {!profile.name && (
+            <div className="animate-pulse">
+              <Card className="mb-4">
+                <CardContent className="flex flex-col p-4 space-y-2">
+                  <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                </CardContent>
+              </Card>
+              <Card className="mb-4">
+                <CardContent className="flex flex-col p-4 space-y-2">
+                  <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
           {profile.name && (
             // view the job postings and events
             <div>
@@ -308,9 +379,9 @@ export default function Home() {
             </div>
           )}
         </div>
-      </div>
+      </div >
 
       <Footer />
-    </div>
+    </div >
   );
 }
