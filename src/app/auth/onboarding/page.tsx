@@ -14,10 +14,6 @@ interface ProfileFormData {
     contact: string;
 }
 
-export const metadata: Metadata = {
-    title: "Welcome :: AlumNet",
-};
-
 const OnboardingForm = () => {
     const router = useRouter();
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,6 +21,10 @@ const OnboardingForm = () => {
     const [error, setError] = useState("");
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [mediaId, setMediaId] = useState<number | null>(null);
+
+    useEffect(() => {
+        document.title = `Welcome :: AlumNet`;
+    }, []);
 
     const {
         register,

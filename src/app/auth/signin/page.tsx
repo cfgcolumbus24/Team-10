@@ -20,11 +20,11 @@ interface ApiResponse {
     };
 }
 
-export const metadata: Metadata = {
-    title: "Sign In :: AlumNet",
-};
-
 const LoginForm: React.FC = () => {
+    useEffect(() => {
+        document.title = `Sign In :: AlumNet`;
+    }, []);
+
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const [formData, setFormData] = useState<FormData>({

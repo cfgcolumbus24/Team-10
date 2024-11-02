@@ -21,13 +21,14 @@ const fullSchema = z.object({
         .min(8, "Password must be at least 8 characters")
         .max(64, "Password must be less than 64 characters"),
 });
-export const metadata: Metadata = {
-    title: "Sign Up :: AlumNet",
-};
 
 type SignupFormData = z.infer<typeof fullSchema>;
 
 const SignupForm = () => {
+    useEffect(() => {
+        document.title = `Sign Up :: AlumNet`;
+    }, []);
+
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
