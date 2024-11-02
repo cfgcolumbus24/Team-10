@@ -11,7 +11,7 @@ import {
 import { use, useEffect, useState } from "react";
 
 import Modal from "@/components/ui/Modal";
-import Navbar from "../components/ui/Navbar";
+import Navbar from "@/components/ui/Navbar";
 
 export default function Home() {
   useEffect(() => {
