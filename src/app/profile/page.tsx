@@ -79,6 +79,21 @@ export default function Index() {
                         addButton={false}
                     />
                 </div>
+                <div className="flex flex-grid gap-4 pt-12">
+                    {profile?.userMedia.map((post) => (
+                        <a key={post.postId} className="group">
+                            <Card>
+                                <div className="flex flex-row items-center justify-center w-64 h-64">
+                                    <img
+                                        className="rounded-md w-full h-full object-cover"
+                                        src={post.url}
+                                        alt="Post image"
+                                    />
+                                </div>
+                            </Card>
+                        </a>
+                    ))}
+                </div>
                 <div className="flex flex-col gap-4 py-8 items-center justify-center">
                     <div className="w-[40%] space-y-8 flex flex-col gap-1">
                         {profile?.galleryPosts.map((post) => (
