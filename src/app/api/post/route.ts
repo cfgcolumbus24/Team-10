@@ -6,7 +6,7 @@ import { withAuth } from "@/lib/auth";
 import { z } from "zod";
 
 const PostSchema = z.object({
-    image: z.string(),
+    image: z.number(),
     body: z.string(),
     type: z.enum(["post", "opportunity", "event"]),
 });
@@ -41,16 +41,20 @@ export const POST = withAuth(
 
             const validatedData = result.data;
 
-            await dbClient.insert(posts).values({
-                userId: auth.user.id,
-                body: validatedData.body,
-                image: 456,
-                type: validatedData.type,
-            });
+            const [{ postId }] = await dbClient
+                .insert(posts)
+                .values({
+                    userId: auth.user.id,
+                    body: validatedData.body,
+                    image: validatedData.image,
+                    type: validatedData.type,
+                })
+                .returning({ postId: posts.id });
 
             return NextResponse.json(
                 {
                     success: true,
+                    data: { postId },
                 },
                 {
                     status: 201,
