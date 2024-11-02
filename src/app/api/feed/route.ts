@@ -5,60 +5,21 @@ import { ApiResponse } from "@/app/api/common";
 import { dbClient } from "@/db/client";
 import { users, posts } from "@/db/schema";
 import { z } from "zod";
+import { desc } from "../../../../node_modules/drizzle-orm/sql/index";
 
 const FeedTypeQuery = z.object ({
     typeOnlyFeed: z.enum(["opportunity", "post","event", "admin"]).optional()
 })
 
 
-
-// Simple GET endpoint
-export async function GET(
-    request: NextRequest
-): Promise<NextResponse<ApiResponse>> {
-    try {
-        // Mock data
-        const data = { message: "Hello" };
-        // Auth fetch
-
-        return NextResponse.json({
-            success: true,
-            data: data,
-        });
-    } catch (error) {
-        return NextResponse.json(
-            {
-                success: false,
-                error: "Failed to get data",
-            },
-            {
-                status: 500,
-            }
-        );
-    }
-}
-
-
-import { NextRequest, NextResponse } from "next/server";
-import { ApiResponse } from "@/app/api/common";
-import { dbClient } from "@/db/client";
-import { users, posts, media } from "@/db/schema"; // Ensure you import all necessary schemas
-import { z } from "zod";
-
-// Define the query parameters schema for validation
-const FeedQuerySchema = z.object({
-    postType: z.enum(["post", "opportunity", "event"]).optional(),
-});
-
-// GET /feed
 export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse>> {
     try {
-        // Parse query parameters
+        // Fine parameters needed
         const { searchParams } = new URL(request.url);
-        const postType = searchParams.get("postType");
+        const typeOnlyFeed = searchParams.get("typeOnlyFeed");
 
-        // Validate the query parameters
-        const validatedQuery = FeedQuerySchema.safeParse({ postType });
+        // Validate parameters
+        const validatedQuery = FeedTypeQuery.safeParse({ typeOnlyFeed });
 
         if (!validatedQuery.success) {
             return NextResponse.json(
@@ -99,11 +60,11 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
             .select()
             .from(posts)
             .where(eq(posts.userId, userId))
-            .orderBy(desc(posts.createdAt)); // Sort by most recent first
+            .orderBy(desc(posts.timestamp)); // Sort by most recent first
 
         // If a post type is specified, filter by it
         if (validatedQuery.data.postType) {
-            postsQuery.where(eq(posts.type, validatedQuery.data.postType));
+            postsQuery.where(eq(posts.type, validatedQuery.data.typeOnlyFeed));
         }
 
         const userPosts = await postsQuery.execute();
