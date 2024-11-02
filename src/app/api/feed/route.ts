@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import { posts, users } from "@/db/schema";
 
 import { ApiResponse } from "@/app/api/common";
-
 import { dbClient } from "@/db/client";
-import { users, posts } from "@/db/schema";
-import { z } from "zod";
 import { desc } from "../../../../node_modules/drizzle-orm/sql/index";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
 
-const FeedTypeQuery = z.object ({
-    typeOnlyFeed: z.enum(["opportunity", "post","event", "admin"]).optional()
-})
+const FeedTypeQuery = z.object({
+    typeOnlyFeed: z.enum(["opportunity", "post", "event", "admin"]).optional(),
+});
 
-
-export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse>> {
+export async function GET(
+    request: NextRequest
+): Promise<NextResponse<ApiResponse>> {
     try {
         // Fine parameters needed
         const { searchParams } = new URL(request.url);
@@ -65,7 +66,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
         // If a post type is specified, filter by it
         if (validatedQuery.data.postType) {
             postsQuery.where(eq(posts.type, validatedQuery.data.typeOnlyFeed));
-        }
+        } // cant do this, you're running a query on results
 
         const userPosts = await postsQuery.execute();
 
