@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
-import { media, posts, users } from "@/db/schema"; // Import your schemas
+import { media, posts, users } from "@/db/schema";
 
 import { ApiResponse } from "@/app/api/common";
-import { dbClient } from "@/db/client"; // Import your database client
+import { dbClient } from "@/db/client";
 import { ne } from "drizzle-orm";
 import { withAuth } from "@/lib/auth";
 import { z } from "zod";
@@ -12,19 +12,26 @@ const ParamsSchema = z.object({
     profileId: z.coerce.number(),
 });
 
-export const GET = withAuth(async (req, auth) => {
+// Add this helper function to parse URL parameters
+function extractProfileId(url: string): number | null {
+    const match = url.match(/\/api\/profile\/(\d+)/);
+    return match ? parseInt(match[1]) : null;
+}
+
+export const GET = withAuth(async (req: NextRequest, auth) => {
     try {
-        if (!auth || !auth.user.id) {
+        // Extract profileId from URL path instead of search params
+        const profileId = extractProfileId(req.nextUrl.pathname);
+
+        if (!profileId) {
             return NextResponse.json(
                 {
                     success: false,
-                    message: "Unauthorized",
+                    error: "Invalid profile ID",
                 },
                 { status: 400 }
             );
         }
-
-        const profileId = auth.user.id;
 
         const [profile] = await dbClient
             .select({
@@ -71,6 +78,7 @@ export const GET = withAuth(async (req, auth) => {
                 message: "Hello world!",
                 profile,
                 userPosts,
+                galleryPosts, // Added this to match your API response type
                 userMedia,
             },
         });

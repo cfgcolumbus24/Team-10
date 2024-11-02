@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { CardContent, CardDescription } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 
 import Navbar from "@/components/ui/Navbar";
 import ProfileCard from "@/components/ui/ProfileCard";
@@ -46,11 +47,12 @@ interface ApiResponse {
 }
 
 export default function Index() {
+    const params = useParams();
     const [profile, setProfile] = useState<ApiResponseData | null>(null);
 
     useEffect(() => {
         async function fetchProfile() {
-            const response = await fetch("/api/profile");
+            const response = await fetch(`/api/profile/${params.profileId}`);
             const result: ApiResponse = await response.json();
             console.log(result);
             if (result.success) {
