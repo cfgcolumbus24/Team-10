@@ -8,8 +8,8 @@ export default function GalleryCard({
     
 
     return (
-        <div className="overflow-x-hidden p-4 bg-white rounded-lg shadow-md border border-gray-200 flex-1 min-h-[300] flex justify-start gap-y-8 relative mt-4">
-            <div className="flex animate-scroll gap-x-2">
+        <div className="overflow-x-auto p-4 bg-white rounded-lg shadow-md border border-gray-200 flex-1 min-h-[300] flex justify-start gap-y-8 relative mt-4">
+            <div className="flex gap-x-2">
             <Card className="min-w-[300]">
                 <CardHeader>
                     <CardTitle>Gallery</CardTitle>
