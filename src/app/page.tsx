@@ -67,7 +67,7 @@ export default function Home() {
             <Card key={post["id"]} className="">
               <CardHeader>
                 <Avatar>
-                  <AvatarImage src={`https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_${post.userId}.png`} />
+                  <AvatarImage src={`https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_${post["userId"]}.png`} />
                   <AvatarFallback>{post["image"]}</AvatarFallback>
                 </Avatar>
                 <CardTitle>hi</CardTitle>
