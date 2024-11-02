@@ -12,7 +12,7 @@ const FollowSchema = z.object({
     userId: z.coerce.number(),
 });
 
-export const disconnect = withAuth(
+export const POST = withAuth(
     async (request, auth): Promise<NextResponse<ApiResponse>> => {
         try {
             if (!auth || !auth.user.id) {
