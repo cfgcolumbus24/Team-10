@@ -3,11 +3,12 @@ import { ApiResponse } from "@/app/api/common";
 import { dbClient } from "@/db/client"; // Import your database client
 import { users, posts, media } from "@/db/schema"; // Import your schemas
 import { z } from "zod";
+import { eq } from "../../../../node_modules/drizzle-orm/index";
 
 // Define Zod schema for validation
-const UserProfile= z.object({
+const UserProfileSchema= z.object({
     name: z.string(),
-    bio: z.string().notNull().optional(),
+    bio: z.string().optional(),
     image: z.string().url().notNull().optional(),
     contact: z.string().nullable().optional(),
     posts: z.array(z.object({
@@ -114,7 +115,9 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
     }
 }
 
+
+
 // Optional: GET /profile/{userid} if you want to fetch a specific user's profile
-export async function GET_USER_PROFILE(request: NextRequest, { params }: { params: { userid: string } }): Promise<NextResponse<ApiResponse>> {
+// export async function GET_USER_PROFILE(request: NextRequest, { params }: { params: { userid: string } }): Promise<NextResponse<ApiResponse>> {
     // You can implement a similar logic as above using params.userid
-}
+//}
