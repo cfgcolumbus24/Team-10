@@ -3,7 +3,6 @@ import { posts, users } from "@/db/schema";
 
 import { ApiResponse } from "@/app/api/common";
 import { dbClient } from "@/db/client";
-import { users, posts } from "@/db/schema";
 import { z } from "zod";
 import { desc, eq } from "../../../../node_modules/drizzle-orm/sql/index";
 
