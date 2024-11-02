@@ -1,8 +1,9 @@
+import { media, posts, users } from "@/db/schema";
+
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
 import { eq } from "drizzle-orm";
-import { users } from "@/db/schema";
 import { z } from "zod";
 
 const ParamsSchema = z.object({
@@ -53,11 +54,24 @@ export async function GET(
             );
         }
 
+        const userPosts = await dbClient
+            .select()
+            .from(posts)
+            .where(eq(posts.userId, profile.id));
+
+        const userMedia = await dbClient
+            .select({ url: media.resourceUrl, postId: posts.id })
+            .from(posts)
+            .leftJoin(media, eq(posts.image, media.id))
+            .where(eq(posts.userId, profile.id));
+
         return NextResponse.json({
             success: true,
             data: {
                 message: "Hello world!",
                 profile,
+                userPosts,
+                userMedia,
             },
         });
     } catch (error) {
