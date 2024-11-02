@@ -13,9 +13,10 @@ export default function PostCard() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
 
+  // Detect screen size to apply responsive styling
   useEffect(() => {
     const handleResize = () => setIsLargeScreen(window.innerWidth >= 1024);
-    handleResize();
+    handleResize(); // Initialize on first render
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -38,31 +39,54 @@ export default function PostCard() {
   const displayPosts = getDisplayPosts();
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md border border-gray-200 min-h-[300px] flex justify-center items-center relative mt-4">
-      <button onClick={handlePrev} className="absolute left-0 p-2 text-gray-500 hover:text-gray-700" aria-label="Previous post">
+    <div className="overflow-hidden p-4 bg-white rounded-lg shadow-md border border-gray-200 min-h-[300px] flex justify-center items-center relative mt-4">
+      <button
+        onClick={handlePrev}
+        className="absolute left-0 p-2 text-gray-500 hover:text-gray-700"
+        aria-label="Previous post"
+      >
         &#8249;
       </button>
 
-      <div className="flex gap-x-4">
+      <div className="flex gap-x-6 transition-transform duration-300 ease-in-out justify-center items-center">
         {displayPosts.map((post, index) => {
-          const isMainPost = index === 1;
-          const style = isMainPost
-            ? "scale-100 opacity-100"
-            : isLargeScreen
-            ? "scale-95 opacity-60"
-            : "scale-90 opacity-40";
+          const isMainPost = index === 1; // Main post is always at center in the array
+          const isTeasedPost = !isMainPost;
+
+          // Styles for main and teased posts based on screen size
+          const mainPostStyles = isLargeScreen
+            ? "scale-105 shadow-lg z-10 transform translate-y-[-5px] opacity-100"
+            : "scale-100 opacity-100";
+          const teaserStyles = isLargeScreen
+            ? "opacity-60 scale-95"
+            : "opacity-40 scale-90";
 
           return (
-            <Card key={post.id} className={`min-w-[300px] ${style}`}>
-              <CardHeader>
-                <CardTitle>{post.title}</CardTitle>
-              </CardHeader>
-            </Card>
+            <div
+              key={post.id}
+              className={`transition-transform duration-500 ease-in-out ${
+                isMainPost ? mainPostStyles : teaserStyles
+              }`}
+              style={{
+                minWidth: isMainPost ? "80%" : "60%",
+                maxWidth: isMainPost ? "80%" : "40%",
+              }}
+            >
+              <Card className="w-full h-full">
+                <CardHeader>
+                  <CardTitle>{post.title}</CardTitle>
+                </CardHeader>
+              </Card>
+            </div>
           );
         })}
       </div>
 
-      <button onClick={handleNext} className="absolute right-0 p-2 text-gray-500 hover:text-gray-700" aria-label="Next post">
+      <button
+        onClick={handleNext}
+        className="absolute right-0 p-2 text-gray-500 hover:text-gray-700"
+        aria-label="Next post"
+      >
         &#8250;
       </button>
     </div>
