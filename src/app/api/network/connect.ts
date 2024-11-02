@@ -1,15 +1,15 @@
+import { and, eq } from "drizzle-orm";
+
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
 import { follows } from "@/db/schema";
 import { withAuth } from "@/lib/auth";
 import { z } from "zod";
-import { doesNotMatch } from "assert";
-import { and, eq } from "../../../../node_modules/drizzle-orm/expressions";
 
 //User To follow
 const FollowSchema = z.object({
-    userId: z.string().uuid(), 
+    userId: z.coerce.number(),
 });
 
 export const POST = withAuth(
@@ -27,7 +27,7 @@ export const POST = withAuth(
 
             const body = await request.json();
             const result = FollowSchema.safeParse(body);
-            
+
             //User doesn't exist
             if (!result.success) {
                 return NextResponse.json(
@@ -45,7 +45,12 @@ export const POST = withAuth(
             const existingFollow = await dbClient
                 .select()
                 .from(follows)
-                .where(and(eq(auth.user.id, follows.followerID), eq(follows.followingID, validatedData.userID)))
+                .where(
+                    and(
+                        eq(follows.followerId, auth.user.id),
+                        eq(follows.followingId, validatedData.userId)
+                    )
+                )
                 .execute();
 
             if (existingFollow.length > 0) {

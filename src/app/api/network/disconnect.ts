@@ -1,14 +1,15 @@
+import { and, eq } from "drizzle-orm";
+
 import { ApiResponse } from "@/app/api/common";
 import { NextResponse } from "next/server";
 import { dbClient } from "@/db/client";
 import { follows } from "@/db/schema";
 import { withAuth } from "@/lib/auth";
 import { z } from "zod";
-import { doesNotMatch } from "assert";
 
 //User To Un-Follow
 const FollowSchema = z.object({
-    userId: z.string().uuid(), 
+    userId: z.coerce.number(),
 });
 
 export const disconnect = withAuth(
@@ -41,20 +42,14 @@ export const disconnect = withAuth(
 
             // Delete the follow relationship if it exists
             const deleted = await dbClient
-                .delete()
-                .from(follows)
-                .where(and(eq(auth.user.id, follows.followerID), eq(follows.followingID, validatedData.userID)))
+                .delete(follows)
+                .where(
+                    and(
+                        eq(follows.followerId, auth.user.id),
+                        eq(follows.followingId, validatedData.userId)
+                    )
+                )
                 .execute();
-
-            if (deleted.rows === 0) {
-                return NextResponse.json(
-                    {
-                        success: false,
-                        message: "No follow relationship found",
-                    },
-                    { status: 404 }
-                );
-            }
 
             return NextResponse.json(
                 {
@@ -75,7 +70,3 @@ export const disconnect = withAuth(
         }
     }
 );
-
-
-
-
