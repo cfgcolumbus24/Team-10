@@ -185,3 +185,132 @@ export function withAuth(
         }
     };
 }
+
+export function withOptionalAuth(
+    handler: (
+        req: NextRequest,
+        auth?: AuthContext
+    ) => Promise<NextResponse<ApiResponse>>
+) {
+    return async function (
+        req: NextRequest
+    ): Promise<NextResponse<ApiResponse>> {
+        try {
+            const token = req.cookies.get("token")?.value;
+
+            // If no token, proceed without auth
+            if (!token) {
+                return handler(req);
+            }
+
+            // Validate session
+            const session = await dbClient
+                .select()
+                .from(sessions)
+                .where(eq(sessions.token, token))
+                .execute();
+
+            // If no valid session, proceed without auth
+            if (session.length < 1) {
+                return handler(req);
+            }
+
+            const { userId, createdAt, expiresAt, invalidated } = session[0];
+
+            // Check session validity
+            if (invalidated) {
+                // Session is invalid, proceed without auth
+                await dbClient
+                    .update(sessions)
+                    .set({ invalidated: true })
+                    .where(eq(sessions.token, token));
+                return handler(req);
+            }
+
+            // Get user data
+            const user = await dbClient
+                .select({
+                    id: users.id,
+                    email: users.email,
+                    userType: users.userType,
+                })
+                .from(users)
+                .where(eq(users.id, userId));
+
+            // If no user found, proceed without auth
+            if (user.length < 1) {
+                return handler(req);
+            }
+
+            const { id, email, userType } = user[0];
+
+            // Check session expiry
+            const timestamp = new Date(Date.now());
+            if (timestamp <= createdAt || timestamp >= expiresAt) {
+                await dbClient
+                    .update(sessions)
+                    .set({ invalidated: true })
+                    .where(eq(sessions.token, token));
+                return handler(req);
+            }
+
+            // Refresh session if close to expiry
+            if (
+                timestamp >=
+                new Date(expiresAt.getTime() - 2 * 24 * 60 * 60 * 1000)
+            ) {
+                const newToken = csprng(256, 16);
+                const revalidated = await dbClient
+                    .insert(sessions)
+                    .values({
+                        token: newToken,
+                        userId: id,
+                    })
+                    .returning({
+                        revalidatedToken: sessions.token,
+                        revalidatedCreatedAt: sessions.createdAt,
+                        revalidatedExpiresAt: sessions.expiresAt,
+                    })
+                    .execute();
+
+                const {
+                    revalidatedToken,
+                    revalidatedCreatedAt,
+                    revalidatedExpiresAt,
+                } = revalidated[0];
+
+                const response = await handler(req, {
+                    session: {
+                        token: revalidatedToken,
+                        createdAt: revalidatedCreatedAt,
+                        expiresAt: revalidatedExpiresAt,
+                    },
+                    user: { id, email, userType },
+                });
+
+                // Set new token cookie
+                response.cookies.set("token", revalidatedToken, {
+                    secure: true,
+                    sameSite: "lax",
+                    httpOnly: false,
+                });
+
+                return response;
+            }
+
+            // Call the handler with current auth context
+            return handler(req, {
+                session: {
+                    token,
+                    createdAt,
+                    expiresAt,
+                },
+                user: { id, email, userType },
+            });
+        } catch (error) {
+            console.error("Auth error:", error);
+            // On any error, proceed without auth instead of failing
+            return handler(req);
+        }
+    };
+}
