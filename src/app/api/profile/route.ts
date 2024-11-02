@@ -3,7 +3,7 @@ import { media, posts, users } from "@/db/schema"; // Import your schemas
 
 import { ApiResponse } from "@/app/api/common";
 import { dbClient } from "@/db/client"; // Import your database client
-import { eq } from "drizzle-orm";
+import { eq} from "drizzle-orm";
 import { withAuth } from "@/lib/auth";
 
 export const GET = withAuth(async (req, auth) => {
@@ -27,8 +27,10 @@ export const GET = withAuth(async (req, auth) => {
                 bio: users.bio,
                 contact: users.contact,
                 pic: users.pic,
+                picUrl: media.resourceUrl,
             })
             .from(users)
+            .leftJoin(media, eq(media.id, users.pic))
             .where(eq(users.id, profileId));
 
         if (!profile) {
@@ -41,11 +43,22 @@ export const GET = withAuth(async (req, auth) => {
             );
         }
 
+        const userPosts = await dbClient.execute(
+            `SELECT * FROM posts WHERE "userId" = $1 AND type != 'post'`,
+            [profileId]
+        );
+
+        const galleryPosts = await dbClient.execute(
+            `SELECT * FROM posts WHERE "userId" = $1 AND type = 'post'`,
+            [profileId]
+        );
+
+        /*
         const userPosts = await dbClient
             .select()
             .from(posts)
             .where(eq(posts.userId, profile.id));
-
+        */
         const userMedia = await dbClient
             .select({ url: media.resourceUrl, postId: posts.id })
             .from(posts)
