@@ -5,7 +5,7 @@ import { ApiResponse } from "@/app/api/common";
 import { dbClient } from "@/db/client";
 import { users, posts } from "@/db/schema";
 import { z } from "zod";
-import { desc } from "../../../../node_modules/drizzle-orm/sql/index";
+import { desc, eq } from "../../../../node_modules/drizzle-orm/sql/index";
 
 const FeedTypeQuery = z.object ({
     typeOnlyFeed: z.enum(["opportunity", "post","event", "admin"]).optional()
