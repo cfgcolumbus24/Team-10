@@ -12,7 +12,7 @@ import { use, useEffect, useState } from "react";
 
 import Footer from "@/components/ui/Footer";
 import Modal from "@/components/ui/Modal";
-import Navbar from "../components/ui/Navbar";
+import Navbar from "@/components/ui/Navbar";
 
 export default function Home() {
     useEffect(() => {
